@@ -1,0 +1,8 @@
+﻿{{#Imports}}
+using {{.}};
+{{/Imports}}
+
+namespace {{Namespace}} 
+{
+	public interface I{{Name.Value}}Gateway : IEntityDapperGateway<{{Name.Value}}, {{Key.DataType}}> { }
+}

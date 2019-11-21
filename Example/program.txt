@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
+using MustacheTemplating.DataProviders;
+using MustacheTemplating.Services;
+
+namespace MustacheTemplating
+{
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            var url = getUrl();
+            operate(url);
+        }
+
+        private static string getUrl()
+        {
+            var domains = new List<string>
+            {
+                "https://apidev.wrberkley.com",
+                "https://tstapi.wrberkley.com"
+            };
+            var leftSide= requestUrl(domains);
+            var rightSide = "/store/api-docs/WRBTS-DOM-cdustin-AT-idi.wrbc/IDIPolicyAPI/1.0.0";
+            return $"{leftSide}{rightSide}";
+        }
+
+        private static string requestUrl(List<string> domains)
+        {
+            var count = domains.Count;
+
+            Console.WriteLine("Choose the domain that you'd like to use.\r\n");
+            for (var i = 0; i < domains.Count; i++)
+            {
+                var domain = domains[i];
+                Console.WriteLine($"{(i+1)}. {domain}");
+            }
+            Console.WriteLine("\r\n");
+
+            var response = Console.ReadLine();
+
+            if (!int.TryParse(response, out var result))
+            {
+                showBoundsError(count, response);
+                return requestUrl(domains);
+            }
+
+            if (result > 0 && result <= domains.Count) return domains[result-1];
+
+            showBoundsError(count, response);
+            return requestUrl(domains);
+        }
+
+        private static void showBoundsError(int count, string response)
+        {
+            Console.WriteLine($"Choose a value between 1 and { count }. You chose { response }.");
+        }
+
+        private static void operate(string url)
+        {
+            var modelGenerationService = new ModelGenerationService(
+                new SwaggerDataProvider(url), 
+                new FileTemplateProvider(), 
+                new FileOutputService(new StubbleRenderEngine())
+            );
+            var result = modelGenerationService.Generate(new List<string> { "Item" });
+            if (result.Success)
+            {
+                Console.WriteLine("Model generation succeeded.");
+                Console.WriteLine(result.Message);
+                Thread.Sleep(3000);
+                return;
+            }
+
+            Console.WriteLine("Model generation failed.");
+            Console.WriteLine(result.Message);
+            Console.ReadLine();
+        }
+    }
+}

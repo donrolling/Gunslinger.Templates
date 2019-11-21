@@ -1,0 +1,90 @@
+{
+  "GenerationContext": {
+    "OutputDirectory": "C:\\CodeGenerationOutput",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [ "Item" ],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "DataProviders": [
+      {
+        "Name": "GenesysModelsDataProvider",
+        "TypeName": "SwaggerDataProvider",
+        "UseLocalDataSource": true,
+        "LocalDataSource": "C:\\Projects\\mustache.stubble.templating\\Example\\devapi.idi.json",
+        "DataSource": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore-expanded.json"
+      },
+      {
+        "Name": "SampleModelsDataProvider",
+        "TypeName": "SwaggerDataProvider",
+        "UseLocalDataSource": true,
+        "LocalDataSource": "C:\\Projects\\mustache.stubble.templating\\Example\\devapi.swagger.petstore.json",
+        "DataSource": ""
+      },
+      {
+        "Name": "SQLModelsDataProvider",
+        "TypeName": "SQLModelDataProvider",
+        "UseLocalDataSource": false,
+        "LocalDataSource": "",
+        "DataSource": "Data Source=localhost;Initial Catalog=idi_market_dev;Integrated Security=SSPI;"
+      }
+    ],
+    "Templates": [
+      {
+        "Type": "Model",
+        "Name": "GenesysModels",
+        "Namespace": "Models",
+        "IsStub": false,
+        "InputRelativePath": "Model.txt",
+        "OutputRelativePath": "GenesysModels\\{0}.cs",
+        "Language": "csharp",
+        "RunOnce": false,
+        "DataProviderName": "GenesysModelsDataProvider",
+        "Imports": [
+          "System.Runtime.Serialization",
+          "System.Text",
+          "Newtonsoft.Json"
+        ]
+      },
+      {
+        "Type": "Model",
+        "Name": "SampleModels",
+        "Namespace": "Models",
+        "IsStub": false,
+        "InputRelativePath": "Model.txt",
+        "OutputRelativePath": "SampleModels\\{0}.cs",
+        "Language": "csharp",
+        "RunOnce": false,
+        "DataProviderName": "SampleModelsDataProvider",
+        "Imports": [
+          "System.Runtime.Serialization",
+          "System.Text",
+          "Newtonsoft.Json"
+        ]
+      },
+      {
+        "Type": "Model",
+        "Name": "SQLModels",
+        "Namespace": "Models",
+        "IsStub": false,
+        "InputRelativePath": "Model.txt",
+        "OutputRelativePath": "SQLModels\\{0}.cs",
+        "Language": "csharp",
+        "RunOnce": false,
+        "DataProviderName": "SQLModelsDataProvider",
+        "Imports": [
+          "System.Runtime.Serialization",
+          "System.Text",
+          "Newtonsoft.Json"
+        ]
+      }
+    ]
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  }
+}

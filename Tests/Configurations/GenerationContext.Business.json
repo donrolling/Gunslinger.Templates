@@ -1,0 +1,45 @@
+{
+  "OutputDirectory": "C:\\Projects\\idi.utilities\\Gunslinger.Templates\\SampleProject",
+  "ProcessTemplateStubs": false,
+  "TemplateDirectory": "Templates",
+  "ExcludeTheseEntities": [ "Item" ],
+  "ExcludeTheseTemplates": [],
+  "IncludeTheseEntitiesOnly": [],
+  "IncludeTheseTemplatesOnly": [],
+  "Resources": [
+  ],
+  "DataProviders": [
+    {
+      "Name": "SQLModelsDataProvider",
+      "TypeName": "SQLModelDataProvider",
+      "UseLocalDataSource": false,
+      "LocalDataSource": "",
+      "DataSource": "Data Source=localhost;Initial Catalog=idi_sample;Integrated Security=SSPI;"
+    }
+  ],
+  "Templates": [
+    {
+      "Type": "Model",
+      "Name": "BaseFacade",
+      "Namespace": "idi.sample.business.Facades",
+      "IsStub": false,
+      "InputRelativePath": "BaseFacade.txt",
+      "OutputRelativePath": "idi.sample.business\\Facades\\{entityName}.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Business.Interfaces",
+        "Business.Services.EntityServices.Base",
+        "Common.Transactions",
+        "Data.Dapper.Models",
+        "Data.Repository.Interfaces",
+        "Microsoft.Extensions.Logging",
+        "Models.Base",
+        "Models.Entities",
+        "Models.Interfaces",
+        "System.Threading.Tasks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+& 'C:\Projects\idi.utilities\Gunslinger.Templates\Gunslinger.Console\bin\Release\netcoreapp3.0\win-x64\publish\Gunslinger.Console.exe' 'C:\Projects\idi.utilities\Gunslinger.Templates\Tests\Configurations\GenerationContextForConsole.json' 'C:\Projects\idi.utilities\Gunslinger.Templates\SampleProject'
