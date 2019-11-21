@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CompositionRoot\CompositionRoot.csproj" />
-    <ProjectReference Include="..\Engine\Gunslinger.csproj" />
+    <ProjectReference Include="..\Gunslinger\Gunslinger.csproj" />
   </ItemGroup>
 
   <ItemGroup>
