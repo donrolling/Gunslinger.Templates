@@ -1,0 +1,11 @@
+﻿{{#Imports}}
+using {{.}};
+{{/Imports}}
+
+namespace {{Namespace}} {
+    public class {{Name.Value}} : BaseEntity<{{Key.DataType}}> {
+        {{#NonKeyProperties}}
+        public {{Type}} {{Name.Value}} { get; set; }
+        {{/NonKeyProperties}}
+    }
+}

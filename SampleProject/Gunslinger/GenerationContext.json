@@ -1,0 +1,164 @@
+{
+  "ProcessTemplateStubs": false,
+  "TemplateDirectory": "Templates",
+  "ExcludeTheseEntities": [ "Item" ],
+  "ExcludeTheseTemplates": [],
+  "IncludeTheseEntitiesOnly": [],
+  "IncludeTheseTemplatesOnly": [],
+  "Resources": [
+  ],
+  "DataProviders": [
+    {
+      "Name": "SQLModelsDataProvider",
+      "TypeName": "SQLModelDataProvider",
+      "UseLocalDataSource": false,
+      "LocalDataSource": "",
+      "DataSource": "Data Source=localhost;Initial Catalog=Sample;Integrated Security=SSPI;"
+    }
+  ],
+  "Templates": [
+    {
+      "Type": "Model",
+      "Name": "EntityModels",
+      "Namespace": "Data.Entities",
+      "IsStub": false,
+      "InputRelativePath": "EntityModel.txt",
+      "OutputRelativePath": "Data\\Entities\\{entityName}.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Dapper.SQLGateway.Models.Base",
+        "System",
+        "System.Collections.Generic"
+      ]
+    },
+    {
+      "Type": "Model",
+      "Name": "Gateway",
+      "Namespace": "Data.Gateway",
+      "IsStub": false,
+      "InputRelativePath": "Gateway.txt",
+      "OutputRelativePath": "Data\\Gateway\\Dapper\\{entityName}DapperGateway.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Data.Gateway.Base",
+        "Data.Interfaces",
+        "Microsoft.Extensions.Logging"
+      ]
+    },
+    {
+      "Type": "Model",
+      "Name": "BaseGateway",
+      "Namespace": "Data.Gateway.Base",
+      "IsStub": false,
+      "InputRelativePath": "BaseGateway.txt",
+      "OutputRelativePath": "Data\\Gateway\\Dapper\\Base\\{entityName}DapperGatewayBase.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Dapper",
+        "Dapper.SQLGateway",
+        "Dapper.SQLGateway.Interfaces",
+        "Dapper.SQLGateway.Models",
+        "Data.Entities",
+        "Microsoft.Extensions.Logging",
+        "System.Threading.Tasks",
+        "System.Data"
+      ]
+    },
+    {
+      "Type": "Model",
+      "Name": "GatewayInterface",
+      "Namespace": "Data.Interfaces",
+      "IsStub": false,
+      "InputRelativePath": "GatewayInterface.txt",
+      "OutputRelativePath": "Data\\Gateway\\Interfaces\\I{entityName}Gateway.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Dapper.SQLGateway.Interfaces",
+        "Data.Entities"
+      ]
+    },
+    {
+      "Type": "Model",
+      "Name": "GatewayTest",
+      "Namespace": "Test.DataAccess",
+      "IsStub": false,
+      "InputRelativePath": "DataAccessTest.txt",
+      "OutputRelativePath": "Test\\DataAccess\\{entityName}_CRUD_Test.cs",
+      "Language": "csharp",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "AutoFixture",
+        "Data.Entities",
+        "Data.Interfaces",
+        "test.Base",
+        "test.Utility",
+        "Microsoft.Extensions.DependencyInjection",
+        "Microsoft.VisualStudio.TestTools.UnitTesting",
+        "System.Collections.Generic",
+        "System.Threading.Tasks"
+      ]
+    },
+    {
+      "Type": "Model",
+      "Name": "InsertProcedure",
+      "Namespace": "",
+      "IsStub": false,
+      "InputRelativePath": "InsertProcedure.txt",
+      "OutputRelativePath": "Database\\{schema}\\Stored Procedures\\{entityName}_Insert.sql",
+      "Language": "sql",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": []
+    },
+    {
+      "Type": "Model",
+      "Name": "UpdateProcedure",
+      "Namespace": "",
+      "IsStub": false,
+      "InputRelativePath": "UpdateProcedure.txt",
+      "OutputRelativePath": "Database\\{schema}\\Stored Procedures\\{entityName}_Update.sql",
+      "Language": "sql",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": []
+    },
+    {
+      "Type": "Model",
+      "Name": "DeleteProcedure",
+      "Namespace": "",
+      "IsStub": false,
+      "InputRelativePath": "DeleteProcedure.txt",
+      "OutputRelativePath": "Database\\{schema}\\Stored Procedures\\{entityName}_Delete.sql",
+      "Language": "sql",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": []
+    },
+    {
+      "Type": "Setup",
+      "Name": "DataAccessTestInjectionWireUp",
+      "Namespace": "Test.Injection",
+      "IsStub": false,
+      "InputRelativePath": "DataAccessTestInjectionWireUp.txt",
+      "OutputRelativePath": "Test\\Injection\\DataAccess.cs",
+      "Language": "sql",
+      "RunOnce": false,
+      "DataProviderName": "SQLModelsDataProvider",
+      "Imports": [
+        "Data.Gateway",
+        "Data.Interfaces",
+        "Microsoft.Extensions.DependencyInjection",
+        "Microsoft.Extensions.Logging"
+      ]
+    }
+  ]
+}
