@@ -1,0 +1,5308 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "SSP Policy API",
+		"description": "A Policy/Client/Account API specification",
+		"termsOfService": "http://bts.com/terms/",
+		"contact": {
+			"name": "BTS Architecture Team",
+			"email": "api@wrberkley.com",
+			"url": "https://sharepoint.wrberkley.com"
+		}
+	},
+	"host": "apidev.wrberkley.com",
+	"basePath": "/t/idi.wrbc/idi/1.0.0",
+	"schemes": [
+		"https",
+		"http"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"produces": [
+		"application/json"
+	],
+	"paths": {
+		"/quotes": {
+			"post": {
+				"description": "Performs an In-Memory quote for price estimate. Executes import edits and rate edits.  No policyNumber is generated during this call.  This is a transient request.",
+				"operationId": "rateTransientPolicyXML",
+				"summary": "Performs an In-Memory quote for price estimate. Executes import edits and rate edits.  No policyNumber is generated during this call.  This is a transient request.",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "Quote to estimate",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "rate transient response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			},
+			"put": {
+				"description": "adds policy to system",
+				"operationId": "addPolicy",
+				"summary": "This call persists a quote in the system.  QT_APP_POL_C = Quote.  To PUT a Quote to the system the caller will need to provide a valid Client & Address ID.  If the policyNumber/term is null a new policyNumber/term will be generated (e.g. 1500000_Q-0) and returned in response.  Policy number response will contain _Q suffix.  Quotes cannot be issued.  Quotes are used to create Quote Proposal documents.",
+				"deprecated": true,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "Quote to estimate",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "rate transient response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyQuotes": {
+			"post": {
+				"description": "adds a new policy quote into the system",
+				"operationId": "addPolicyQuoteXML",
+				"summary": "This call persists a quote in the system.  QT_APP_POL_C = Quote.  To PUT a Quote to the system the caller will need to provide a valid Client & Address ID.  If the policyNumber/term is null a new policyNumber/term will be generated (e.g. 1500000_Q-0) and returned in response.  Policy number response will contain _Q suffix.  Quotes cannot be issued.  Quotes are used to create Quote Proposal documents.",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "PolicyQuote to save",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					{
+						"name": "returnPolicyData",
+						"in": "query",
+						"required": false,
+						"type": "string",
+						"description": "return full data in response indicator",
+						"enum": [
+							"true",
+							"false"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "post policyQuote response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyPremiums/{policyNumber}/{policyTerm}": {
+			"get": {
+				"description": "adds premiums to a policy quote in the system",
+				"operationId": "ratePolicyWithPrintXML",
+				"summary": "rates policy / quote",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to fetch",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "the policy term/mod",
+						"type": "string",
+						"required": true,
+						"default": "0"
+					},
+					{
+						"name": "printQuote",
+						"in": "query",
+						"required": false,
+						"type": "string",
+						"description": "print request indicator",
+						"enum": [
+							"true",
+							"false"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "post policyQuote response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyQuotes/{policyNumber}/{policyTerm}": {
+			"get": {
+				"description": "Returns policyQuote data for the policy number and term specified. No rating is performed.",
+				"operationId": "retrievePrintXML",
+				"summary": "Returns policyquote data for the policy number and term specified. No rating is performed.",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to fetch",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "the policy term/mod",
+						"type": "string",
+						"required": true,
+						"default": "0"
+					},
+					{
+						"name": "report",
+						"in": "query",
+						"required": false,
+						"type": "string",
+						"description": "policy report code",
+						"enum": [
+							"GETPOLPART",
+							"GETPOLFULL",
+							"GETUNITLST",
+							"NEWBUSINES",
+							"DRAFT",
+							"BINDER",
+							"P_OVERVIEW",
+							"POLEVENT",
+							"POLINQSERV",
+							"POLSUMMARY",
+							"QUOTE",
+							"WEB_XML",
+							"WEB_XML_UC",
+							"WEB_XML_UN",
+							"WORKSHEET"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "rate transient response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			},
+			"delete": {
+				"summary": "Deletes a policyQuote in the system.  Does not delete client core client.  Does not delete Quote Proposal documents.",
+				"description": "deletes a single quote based on the policyNumber supplied.",
+				"operationId": "deletePolicyQuote",
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "dsik key",
+						"type": "string",
+						"default": "59e76e5f-8483-3b2d-4142-8a85e7cd535f"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to delete",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"type": "string",
+						"description": "policy term number",
+						"required": true
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "quote deleted"
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/quotes/{policyNumber}/{policyTerm}": {
+			"get": {
+				"description": "Returns quote data for the policy number and term specified. Executes rate edits and quoting.",
+				"operationId": "ratePolicyXML",
+				"summary": "Returns quote data for the policy number and term specified. Executes rate edits and quoting before returning.",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"description": "authorization",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to fetch",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "the policy term/mod",
+						"type": "string",
+						"required": true,
+						"default": "0"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "rate transient response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			},
+			"delete": {
+				"summary": "Deletes a quote in the system.  Does not delete client core client.  Does not delete Quote Proposal documents.",
+				"description": "deletes a single quote based on the policyNumber supplied.",
+				"deprecated": true,
+				"operationId": "deleteQuote",
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "dsik key",
+						"type": "string",
+						"default": "59e76e5f-8483-3b2d-4142-8a85e7cd535f"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to delete",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"type": "string",
+						"description": "policy term number",
+						"required": true
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "quote deleted"
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policies": {
+			"post": {
+				"description": "adds policy to system",
+				"summary": "Imports a new policy in the policy System.  Does not rate the policy.  If policyNumber/term is null, then the a new policyNumber/term will be generated and returned.  If a policyNumber/term is provided it must be unique.  This could be a previous quote policyNumber w/o the _Q suffix. Executes import edits.  Requires a valid ClientID, AddressID reference to persist.  The current client core data will be used as the Primary Named Insured.  If Policy will be externally issued via PUT then a valid Bill Account Number will need to be provided.",
+				"operationId": "addPolicyXML",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "Policy to submit",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "addPolicy response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policies/{policyNumber}/{policyTerm}": {
+			"get": {
+				"description": "Exports and returns a single policy in the system.",
+				"summary": "Returns a single policy based on a single policyNumber and term.  No Edits, No Rating is performed.",
+				"operationId": "openPolicyForInquiry",
+				"produces": [
+					"application/json",
+					"application/xml",
+					"text/xml",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string",
+						"default": "59e76e5f-8483-3b2d-4142-8a85e7cd535f"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to fetch",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "the policy term/mod",
+						"type": "string",
+						"required": true,
+						"default": "0"
+					},
+					{
+						"name": "report",
+						"in": "query",
+						"required": false,
+						"type": "string",
+						"description": "policy report code",
+						"enum": [
+							"GETPOLPART",
+							"GETPOLFULL",
+							"GETUNITLST",
+							"NEWBUSINES",
+							"DRAFT",
+							"BINDER",
+							"P_OVERVIEW",
+							"POLEVENT",
+							"POLINQSERV",
+							"POLSUMMARY",
+							"QUOTE",
+							"WEB_XML",
+							"WEB_XML_UC",
+							"WEB_XML_UN",
+							"WORKSHEET"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "policy response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			},
+			"delete": {
+				"summary": "Deletes an incomplete policy. Does not delete client core client.  Does not delete policy documents.  Not able to delete issued / active policies.",
+				"description": "deletes a single incomplete policy based on the policyNumber supplied.",
+				"operationId": "deletePolicy",
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "dsik key",
+						"type": "string",
+						"default": "59e76e5f-8483-3b2d-4142-8a85e7cd535f"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to delete",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"type": "string",
+						"description": "policy term number",
+						"required": true
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "policy deleted"
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			},
+			"put": {
+				"description": "Issue an incomplete policy in the policy system.  Execute rate + issue edits.  Requires a valid Billing Account Number was previoulsy supplied.",
+				"summary": "Issues an incomplete policy.  Duplicates are not allowed.",
+				"operationId": "issuePolicyXML",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"type": "string",
+						"description": "Policy number to issue",
+						"required": true
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"type": "string",
+						"description": "policy term number",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "policy response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyReports/{policyNumber}/{policyTerm}": {
+			"get": {
+				"description": "exports policy based on report",
+				"operationId": "retrievePrintReportXML",
+				"produces": [
+					"application/json",
+					"application/xml",
+					"text/xml",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string",
+						"default": "59e76e5f-8483-3b2d-4142-8a85e7cd535f"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "ID of policy to fetch",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "the policy term/mod",
+						"type": "string",
+						"required": true,
+						"default": "0"
+					},
+					{
+						"name": "report",
+						"in": "query",
+						"required": false,
+						"type": "string",
+						"description": "policy report code",
+						"enum": [
+							"GETPOLPART",
+							"GETPOLFULL",
+							"GETUNITLST",
+							"NEWBUSINES",
+							"DRAFT",
+							"BINDER",
+							"P_OVERVIEW",
+							"POLEVENT",
+							"POLINQSERV",
+							"POLSUMMARY",
+							"QUOTE",
+							"WEB_XML",
+							"WEB_XML_UC",
+							"WEB_XML_UN",
+							"WORKSHEET"
+						]
+					},
+					{
+						"name": "responseFormat",
+						"in": "query",
+						"type": "string",
+						"description": "the policy response format",
+						"enum": [
+							"BERKLEYACORD",
+							"GENESYSXML",
+							"GENESYSJSON",
+							"API",
+							"ACORDPLUSBERKLEY"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "policy response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyDecisions": {
+			"post": {
+				"description": "executes policy rules and evalutes data to return decisions.  Underwriting, knockout rules, data validation, second pass validation edits.",
+				"summary": "Fires the Budiness Rules based on the policy input request",
+				"operationId": "fireAllRules",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "Policy to evaluate",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "fireAllRules response",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/policyCredits/{policyNumber}/{policyTerm}": {
+			"post": {
+				"description": "surcharges or credits an existing policy in the system",
+				"summary": "Credit policy operation to adjust various credit and surcharges on the policy.",
+				"operationId": "creditPolicyXML",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyNumber",
+						"in": "path",
+						"description": "policynumber",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policyTerm",
+						"in": "path",
+						"description": "policy term to credit",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "policy",
+						"in": "body",
+						"description": "Policy to credit",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "creditPolicy response",
+						"schema": {
+							"$ref": "#/definitions/Item"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/MsgStatus"
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/accounts/{accountID}": {
+			"get": {
+				"description": "Returns a billing account http://mgb-int/esb/accounts/10037077",
+				"summary": "Gets Billing Account data.  Used to retrieve billing account information.",
+				"operationId": "getBillingData",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "accountID",
+						"in": "path",
+						"description": "account number",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "response",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Account"
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/accounts": {
+			"post": {
+				"description": "Wraps the exsiting XML web services.",
+				"summary": "Posts a new billing account in the billing system. Payer ID is required to link the Billing Account to a valid Client Core record.",
+				"operationId": "processAccountImport",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "account",
+						"in": "body",
+						"description": "new account data",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Account"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "account creation response /w new account number",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Account"
+							}
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/accountPolicies": {
+			"post": {
+				"description": "uses importPremium",
+				"operationId": "processPremiumImport",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "accountPolicy",
+						"in": "body",
+						"description": "new account data",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/AccountPolicy"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "account creation response /w new account number",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AccountPolicy"
+							}
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/clients/{clientID}": {
+			"get": {
+				"description": "Returns a client using the existing XML web services.",
+				"summary": "Returns a current client based on the clientID input parameter.",
+				"operationId": "getClientInfo",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "clientID",
+						"in": "path",
+						"description": "client core number",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "response",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Client"
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/clients/findByBusinessName": {
+			"get": {
+				"description": "returns a search result list based on business name client search",
+				"summary": "client search",
+				"operationId": "performClientSearch",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "dsik key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "businessName",
+						"in": "query",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "search response",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Item"
+							}
+						}
+					},
+					"404": {
+						"description": "not found",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Item"
+							}
+						}
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		},
+		"/clients": {
+			"post": {
+				"description": "creates a new client",
+				"summary": "creates a new client in the ClientCore System.  Client can be used as the Payor in the Billing System or the Primary Named Insured in the Policy system or both.",
+				"operationId": "importClient",
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "dsik",
+						"in": "header",
+						"description": "Desiginated system identifier key",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "client",
+						"in": "body",
+						"description": "new client data",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Client"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "client creation response /w new client number",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Client"
+							}
+						}
+					},
+					"404": {
+						"description": "client not added"
+					}
+				},
+				"x-auth-type": "Application & Application User",
+				"x-throttling-tier": "Unlimited"
+			}
+		}
+	},
+	"definitions": {
+		"Item": {
+			"type": "object",
+			"required": [
+				"TransactionRequestDate",
+				"Policy"
+			],
+			"properties": {
+				"RqUID": {
+					"type": "string",
+					"title": "the transaction unique identifier",
+					"description": "a unique id per request"
+				},
+				"TransactionRequestDate": {
+					"title": "the transaction request date",
+					"type": "string",
+					"format": "date-time",
+					"default": "2016-10-01T00:00:00Z",
+					"description": "the call date for the request (i.e. todays date), Genesys PolicyVersionInfo.VersionProcessTime and TouchProcessTime"
+				},
+				"ProductEffectiveDate": {
+					"title": "the product effective date",
+					"type": "string",
+					"format": "date-time",
+					"default": "2016-10-01T00:00:00Z",
+					"description": "the product config effective date , Genesys <SYSADMIN_PROCESS_D> aka OpStatus Date."
+				},
+				"ReferenceNumber": {
+					"type": "string",
+					"default": "test quote",
+					"description": "a generic reference number for this item.  Genesys InsurancePolicyXML.POLICY_DESC"
+				},
+				"BusinessPurposeTypeCode": {
+					"type": "string",
+					"description": "the business purpose type. Genesys n/a",
+					"default": "NBS",
+					"enum": [
+						"NBS"
+					]
+				},
+				"Policy": {
+					"type": "array",
+					"title": "the policy",
+					"description": "array for the policy.  Genesys InsurancePolicyXML",
+					"items": {
+						"$ref": "#/definitions/Policy"
+					}
+				},
+				"Location": {
+					"title": "the location",
+					"items": {
+						"$ref": "#/definitions/Location"
+					},
+					"description": "the locations included for this policy. Genesys SharedLocation",
+					"type": "array"
+				},
+				"Driver": {
+					"title": "the driver(s)",
+					"type": "array",
+					"description": "the schedule of drivers for this policy. Genesys Driver",
+					"items": {
+						"$ref": "#/definitions/Driver"
+					}
+				},
+				"Vehicle": {
+					"title": "the vehicle schedule",
+					"type": "array",
+					"description": "the vehicle schedule.  Genesys SharedVehicle",
+					"items": {
+						"$ref": "#/definitions/Vehicle"
+					}
+				},
+				"CPLineOfBusiness": {
+					"title": "the commercial property lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CPLineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = CP"
+				},
+				"CALineOfBusiness": {
+					"title": "the commercial auto lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CALineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = CA"
+				},
+				"WCLineOfBusiness": {
+					"title": "the workers comp lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/WCLineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = WC"
+				},
+				"CGLineOfBusiness": {
+					"title": "the comml general liability lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CGLineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = CG Commercial General Liability"
+				},
+				"CRLineOfBusiness": {
+					"title": "the crime lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CRLineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = CR   Crime"
+				},
+				"CMLineOfBusiness": {
+					"title": "the inland marine lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CMLineOfBusiness"
+					}
+				},
+				"CULineOfBusiness": {
+					"title": "the Commercial Umbrella / Excess lob",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CULineOfBusiness"
+					},
+					"description": "Genesys SecondaryProduct.LobCd = CU Umbrella"
+				},
+				"AdditionalInterest": {
+					"title": "Additional Interest",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AdditionalInterest"
+					}
+				},
+				"QuoteCondition": {
+					"title": "quote conditions and comments",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/QuoteCondition"
+					}
+				},
+				"MsgStatus": {
+					"title": "results",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MsgStatus"
+					},
+					"description": "the process results.  Genesys subProcessResults.MsgErrorDesc | message | errors"
+				},
+				"ActivityNote": {
+					"title": "policy or quote activity and notes",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ActivityNote"
+					}
+				}
+			}
+		},
+		"Policy": {
+			"type": "object",
+			"title": "The Policy",
+			"description": "the policy rate and submission information.",
+			"required": [
+				"ControllingStateProvinceCode",
+				"LineOfBusinessCode",
+				"PolicyTypeCode",
+				"ProductCode",
+				"TermEffectiveDate",
+				"TermExpirationDate",
+				"TermDuration",
+				"ProducerCode",
+				"BillingMethodCode",
+				"ReportCompanyCode",
+				"CompanyCode",
+				"BranchOfficeCode",
+				"OwnerSegmentCode"
+			],
+			"properties": {
+				"PolicyStatusCode": {
+					"title": "the policy status",
+					"type": "string",
+					"description": "The policy status, Incomplete for quotes, Active for issued policies.  Genesys InsurancePolicyXML/CUR_STATUS_C_CODE",
+					"default": "INCOMPLETE",
+					"enum": [
+						"INCOMPLETE",
+						"ACTIVE",
+						"QUOTE"
+					]
+				},
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "The 7-digit policy number.  Genesys InsurancePolicyXML.Policy_nbr_x"
+				},
+				"PolicyTerm": {
+					"title": "the policy term",
+					"type": "string",
+					"default": "0",
+					"description": "the policy term. Genesys InsurancePolicyXML.Policy_nbr_seq"
+				},
+				"ProductCode": {
+					"title": "the product code",
+					"type": "string",
+					"description": "the policy product code. Genesys InsurancePolicyXML.PrimaryProduct.ProductUnit.PRODUCT_ID_CODE",
+					"enum": [
+						"IDI",
+						"BLS",
+						"BPS",
+						"RIC",
+						"BRC"
+					]
+				},
+				"WrittenAmount": {
+					"title": "the total policy premmium amount",
+					"type": "string",
+					"description": "the total written premium amount. Genesys InsurancePolicyXML/PREM_TOTAL_M"
+				},
+				"OverviewTotalAmount": {
+					"title": "the total policy amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the total overview totalamount. Genesys InsurancePolicyXML/OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the policy tax amount",
+					"type": "string",
+					"description": "the tax amount. Genesys InsurancePolicyXML/TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the policy surcharge amount",
+					"type": "string",
+					"description": "the surcharge amount. Genesys InsurancePolicyXML/SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the policy fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys InsurancePolicyXML/FEES_TOTAL_M"
+				},
+				"TermEffectiveDate": {
+					"title": "the policy effective date",
+					"type": "string",
+					"format": "date-time",
+					"description": "policy effective date. Genesys //InsurancePolicyXML/PolicyTermInfo/PolicyTermEffectiveDate",
+					"default": "2016-10-01T00:00:00Z"
+				},
+				"TermExpirationDate": {
+					"title": "the policy expiration date. //InsurancePolicyXML/PolicyTermInfo/PolicyTermExpirationDate",
+					"type": "string",
+					"format": "date-time",
+					"description": "policy expiration date",
+					"default": "2017-10-01T00:00:00Z"
+				},
+				"ClientId": {
+					"title": "the client core identifier",
+					"type": "string",
+					"description": "the client reference required for policy submission or Quote PUTs. Genesys InsurancePolicyXML/CLIENT_ID",
+					"default": "10350"
+				},
+				"ClientFein": {
+					"title": "the client Federal Employee Identification Number (FEIN)",
+					"type": "string",
+					"description": "the client's FEIN number. Genesys PrimaryNamedInsured/NamedInsured/Name/TAX_ID"
+				},
+				"AddressId": {
+					"title": "the client core address identifier",
+					"type": "string",
+					"description": "the client address reference required for policy submission or Quote PUTs. Genesys PrimaryAddress/PolicyAddress/Address/AddressIdentifier",
+					"default": "10350"
+				},
+				"SecondaryNamedInsured": {
+					"title": "the array of secondary named insureds",
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "the list of non-primary client ids to be added to the policy."
+				},
+				"TermDuration": {
+					"title": "the policy term duration",
+					"type": "string",
+					"default": "12",
+					"description": "the term length in months (i.e. 12). Genesys InsurancePolicyXML/PolicyTermInfo/PolicyTermType_Code"
+				},
+				"ControllingStateProvinceCode": {
+					"title": "the rate/tax state",
+					"type": "string",
+					"default": "KS",
+					"enum": [
+						"KS",
+						"MO"
+					],
+					"description": "the rateState or taxState for this policy. Genesys InsurancePolicyXML/PrimaryProduct/ProductUnit/STATE_CODE_CODE"
+				},
+				"PolicyTypeCode": {
+					"title": "the policy type",
+					"type": "string",
+					"default": "34",
+					"enum": [
+						"10",
+						"31",
+						"32",
+						"33",
+						"34",
+						"35",
+						"36",
+						"37",
+						"38",
+						"55"
+					],
+					"description": "policy type code Monoline is 10, Office is 33, Services is 36, Mercantile is 34 Apartments is 32, Contractors Risk is 38, Farm Combo is 55, Industrial/Processing Risk is 37, Institutional is 35, Motel/Hotel is 31  . Genesys Field InsurancePolicyXML.TYPE_OF_POLICY_C_CODE"
+				},
+				"LineOfBusinessCode": {
+					"title": "the policy symbol",
+					"type": "string",
+					"default": "iRP",
+					"enum": [
+						"iRP",
+						"iRW",
+						"iDA"
+					],
+					"description": "A code identifying the policy line of business classification, aka Policy Symbol. InsurancePolicyXML/POLICY_SYMBOL_C_CODE"
+				},
+				"ProducerCode": {
+					"title": "the agent code",
+					"type": "string",
+					"default": "10000",
+					"enum": [
+						"10000",
+						"20000"
+					],
+					"description": "Producer Code 10000 package and WC.  Producer Code 20000 for iDA Hired Non-Owned Auto for BRISC. for the agency/producer code for this policy. Genesys InsurancePolicyXML/AGENCY_C_Code"
+				},
+				"LegalEntityCode": {
+					"title": "the legal entity code",
+					"type": "string",
+					"default": "CORP",
+					"enum": [
+						"CORP",
+						"PARTNER",
+						"LLC",
+						"INDIVIDUAL",
+						"SECURED",
+						"JOINT",
+						"NONPROFIT",
+						"TRUST",
+						"OTHER",
+						"LLP"
+					],
+					"description": "the legal entity type code for the insured CORP, PART, LLC, IND. Genesys InsurancePolicyXML/LEGAL_ENTITY_C_CODE"
+				},
+				"BusinessDescription": {
+					"title": "the business description",
+					"type": "string",
+					"default": "Business Description",
+					"description": "a description of the business . Genesys InsurancePolicyXML/BUSINESS_DESC"
+				},
+				"OwnerSegmentCode": {
+					"title": "the policy owner",
+					"type": "string",
+					"default": "IDIALL",
+					"enum": [
+						"IDIALL",
+						"BUPALL",
+						"BLSALL",
+						"RICALL"
+					],
+					"description": "the owner code for this policy BLSALL, IDIALL. Genesys InsurancePolicyXML/OwnerSegment_Code"
+				},
+				"ReportCompanyCode": {
+					"title": "the report company",
+					"type": "string",
+					"default": "59",
+					"enum": [
+						"59",
+						"125"
+					],
+					"description": "the reporting company code 125 for BRISC, 059 for IDI. Genesys InsurancePolicyXML/REPORT_COMPANY_C_CODE"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the policy reinsurance type code",
+					"type": "string",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					],
+					"description": "the primary product reinsurance type code. Genesys InsurancePolicyXML/PrimaryProduct/ProductUnit/REINSURANCE_TYPE_C_CODE"
+				},
+				"CompanyCode": {
+					"title": "the company",
+					"type": "string",
+					"default": "59",
+					"enum": [
+						"59",
+						"125"
+					],
+					"description": "the company code 59 for IDI, Company Code 125 is for BRISC (for HNOA). Genesys InsurancePolicyXML/PrimaryProduct/ProductUnit/COMPANY_ID_CODE"
+				},
+				"BusinessProgramCode": {
+					"title": "the business program",
+					"type": "string",
+					"enum": [
+						"MARCOS",
+						"PZ_OTHER"
+					],
+					"description": "Genesys InsurancePolicyXML/BUSINESS_PROGRAM_CODE"
+				},
+				"BranchOfficeCode": {
+					"title": "the branch office",
+					"type": "string",
+					"default": "IDI",
+					"enum": [
+						"IDI",
+						"BLS",
+						"BFM"
+					],
+					"description": "the branch office code BLS, IDI, BUP. Genesys InsurancePolicyXML/BRANCH_OFFICE_ID_CODE"
+				},
+				"BillingAccountNumber": {
+					"title": "the bill account number",
+					"type": "string",
+					"description": "the billing account number for this policy BillingAPI-> Account -> accountNumber. Genesys InsurancePolicyXML/ACCOUNT_NBR"
+				},
+				"BillingMethodCode": {
+					"title": "the bill method",
+					"type": "string",
+					"default": "DB",
+					"enum": [
+						"DB",
+						"AB"
+					],
+					"description": "Billing Type DB or AB. Genesys InsurancePolicyXML/BILL_TYPE_C_CODE"
+				},
+				"PaymentPlanCode": {
+					"title": "the pay plan",
+					"type": "string",
+					"default": "MA",
+					"enum": [
+						"MA",
+						"1P",
+						"4F",
+						"FULL"
+					],
+					"description": "The Pay Plan Code for this policy MA, FULL, 1P, 4P. Genesys InsurancePolicyXML/PAY_PLAN_C_CODE"
+				},
+				"SICCode": {
+					"title": "the SIC code",
+					"type": "string",
+					"default": "9999",
+					"description": "The Standard Industrial Classification SIC is a system for classifying industries by a four-digit code. Genesys InsurancePolicyXML/PrimaryProduct/ProductUnit/CustomDetailsInState/SIC_CD"
+				},
+				"NAICSCode": {
+					"title": "the NAICS Code",
+					"type": "string",
+					"description": "North American Industry Classification System (NAICS). Genesys InsurancePolicyXML/SIC_CODE"
+				},
+				"TerrorismAppliesCode": {
+					"title": "Does Terrorism Apply",
+					"description": "does terrorism apply?, accept TRSM_A or reject TRSM_R",
+					"type": "string",
+					"enum": [
+						"TRSM_A",
+						"TRSM_R"
+					]
+				},
+				"TerrorismAppliesAutoCode": {
+					"title": "Does Terrorism Apply to Auto",
+					"description": "does terrorism apply to auto/garage?, accept TRSM_A or reject TRSM_R",
+					"type": "string",
+					"enum": [
+						"TRSM_A",
+						"TRSM_R"
+					]
+				},
+				"TerrorismAppliesCrimeCode": {
+					"title": "Does Terrorism Apply to Crime",
+					"description": "does terrorism apply to crime?, accept TRSM_A or reject TRSM_R",
+					"type": "string",
+					"default": "TRSM_R",
+					"enum": [
+						"TRSM_A",
+						"TRSM_R"
+					]
+				},
+				"AmendmentDistributionCode": {
+					"title": "Enter the Amendment Distribution",
+					"description": "the amendment distribution code in Billing Information.  Genesys InsurancePolicyXML/AMEND_DISTRIB_C_CODE.  NS is Next Statement, NI is Next Installment, ST is spread on term, SU is spread on unbilled and SI is Spread based on installment percentage.",
+					"type": "string",
+					"enum": [
+						"NS",
+						"NI",
+						"ST",
+						"SU",
+						"SI"
+					]
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"CombineSecondaryQuoteCode": {
+					"title": "Combined Secondary Quote",
+					"description": "the combined secondary quote code used for combining quote proposal.",
+					"type": "string",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"PolicySourceDescription": {
+					"title": "the policy source",
+					"type": "string",
+					"description": "Text description for this policy or quote.  Defaults to GENESYS for Genesys created policies. IMPORT_SRC_DESC genesys column."
+				},
+				"AssociationPolicyNumber1": {
+					"title": "the first combined quote number",
+					"type": "string",
+					"description": "the first combined quote number (hnoa iRD first)"
+				},
+				"AssociationPolicySequence1": {
+					"title": "the first combined quote sequence",
+					"type": "string",
+					"description": "the combined quote sequence (hnoa iRD first)"
+				},
+				"AssociationPolicyNumber2": {
+					"title": "the second combined quote number",
+					"type": "string",
+					"description": "the second combined quote number if applicable. (wc second)"
+				},
+				"AssociationPolicySequence2": {
+					"title": "the second combined quote sequence",
+					"type": "string",
+					"description": "the combined quote sequence if applicable (wc second)"
+				}
+			}
+		},
+		"AccountPolicy": {
+			"type": "object",
+			"title": "the Billing Account Policy",
+			"description": "the account policy info",
+			"required": [
+				"PolicyNumber",
+				"PolicyTerm",
+				"BillingAccountNumber",
+				"ProducerCode",
+				"PaymentPlanCode",
+				"ControllingStateProvinceCode",
+				"ClientId",
+				"ClientNameSequenceNumber",
+				"AddressId",
+				"TermEffectiveDate",
+				"TermExpirationDate",
+				"LineOfBusinessCode",
+				"SourceCode",
+				"CoverageStates",
+				"TransactionEffectiveDate",
+				"TransactionExpirationDate",
+				"TransactionTypeCode",
+				"TransactionAmount",
+				"ProcessDate",
+				"AccountPolicyItem",
+				"Method",
+				"Status"
+			],
+			"properties": {
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "The 7-digit policy number.  Genesys InsurancePolicyXML.Policy_nbr_x"
+				},
+				"PolicyTerm": {
+					"title": "the policy term",
+					"type": "string",
+					"default": "0",
+					"description": "the policy term. Genesys InsurancePolicyXML.Policy_nbr_seq"
+				},
+				"TermEffectiveDate": {
+					"title": "the policy effective date",
+					"type": "string",
+					"format": "date-time",
+					"description": "policy effective date. Genesys //InsurancePolicyXML/PolicyTermInfo/PolicyTermEffectiveDate",
+					"default": "2016-10-01T00:00:00Z"
+				},
+				"TermExpirationDate": {
+					"title": "the policy expiration date. //InsurancePolicyXML/PolicyTermInfo/PolicyTermExpirationDate",
+					"type": "string",
+					"format": "date-time",
+					"description": "policy expiration date",
+					"default": "2017-10-01T00:00:00Z"
+				},
+				"LineOfBusinessCode": {
+					"title": "the policy symbol",
+					"type": "string",
+					"default": "iRP",
+					"enum": [
+						"iRP",
+						"iRW",
+						"iDA"
+					],
+					"description": "A code identifying the policy line of business classification, aka Policy Symbol. InsurancePolicyXML/POLICY_SYMBOL_C_CODE"
+				},
+				"CompanyId": {
+					"title": "the company identifier (global) not code",
+					"type": "string",
+					"enum": [
+						"11838959",
+						"750280",
+						"11315454"
+					],
+					"description": "CompanyId_IDI_59_11838959  CompanyId_CCI_80_750280 CompanyId_BIC_70_11315454"
+				},
+				"ProducerCode": {
+					"title": "the agent code",
+					"type": "string",
+					"default": "10000",
+					"enum": [
+						"10000",
+						"20000"
+					],
+					"description": "Producer Code 10000 package and WC.  Producer Code 20000 for iDA Hired Non-Owned Auto for BRISC. for the agency/producer code for this policy. Genesys InsurancePolicyXML/AGENCY_C_Code"
+				},
+				"PaymentPlanCode": {
+					"title": "the pay plan",
+					"type": "string",
+					"default": "MA",
+					"enum": [
+						"MA",
+						"1P",
+						"4F",
+						"FULL"
+					],
+					"description": "The Pay Plan Code for this policy MA, FULL, 1P, 4P. Genesys InsurancePolicyXML/PAY_PLAN_C_CODE"
+				},
+				"ControllingStateProvinceCode": {
+					"title": "the rate/tax state",
+					"type": "string",
+					"description": "the rateState or taxState for this policy. Genesys InsurancePolicyXML/PrimaryProduct/ProductUnit/STATE_CODE_CODE"
+				},
+				"ClientId": {
+					"title": "the client core identifier",
+					"type": "string",
+					"description": "the client reference required for policy submission or Quote PUTs. Genesys InsurancePolicyXML/CLIENT_ID"
+				},
+				"ClientNameSequenceNumber": {
+					"title": "the client core business name sequence number",
+					"type": "string",
+					"description": "the client name sequence number InsuredSeqNumber"
+				},
+				"AddressId": {
+					"title": "the client core address identifier",
+					"type": "string",
+					"description": "the client address reference required for policy submission or Quote PUTs. Genesys PrimaryAddress/PolicyAddress/Address/AddressIdentifier"
+				},
+				"BillingAccountNumber": {
+					"title": "the bill account number",
+					"type": "string",
+					"description": "the billing account number for this policy BillingAPI-> Account -> accountNumber. Genesys InsurancePolicyXML/ACCOUNT_NBR"
+				},
+				"SourceCode": {
+					"title": "the policy source code",
+					"type": "string",
+					"description": "the text value Source policy system"
+				},
+				"PaidInFullDiscount": {
+					"title": "the paid in full discount",
+					"type": "string",
+					"description": "the paid in full discount"
+				},
+				"CoverageStates": {
+					"title": "the array of coverage states",
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "the list of rate states on the policy."
+				},
+				"TransactionEffectiveDate": {
+					"title": "the transaction effective date",
+					"type": "string",
+					"format": "date-time",
+					"description": "transaction effective date."
+				},
+				"TransactionExpirationDate": {
+					"title": "the transaction expiration date.",
+					"type": "string",
+					"format": "date-time",
+					"description": "transaction expiration date"
+				},
+				"TransactionTypeCode": {
+					"title": "the Transaction Typecode",
+					"type": "string",
+					"enum": [
+						"NB"
+					],
+					"description": "the TransactionType Code"
+				},
+				"TransactionAmount": {
+					"title": "the Transaction Amount",
+					"type": "string",
+					"description": "the Transaction Amount"
+				},
+				"TransactionEndorsementId": {
+					"title": "the transaction endorsement id",
+					"type": "string",
+					"description": "the endorsement identifier for transaction"
+				},
+				"ProcessDate": {
+					"title": "the  process date.",
+					"type": "string",
+					"format": "date-time",
+					"description": "process date for this transaction"
+				},
+				"Method": {
+					"title": "the method",
+					"type": "string",
+					"enum": [
+						"SU"
+					],
+					"description": "the transaction method"
+				},
+				"Status": {
+					"title": "the status",
+					"type": "string",
+					"enum": [
+						"ACTIVE"
+					],
+					"description": "the status"
+				},
+				"Waived": {
+					"title": "waived",
+					"type": "string",
+					"enum": [
+						"N",
+						"Y"
+					],
+					"description": "indicator if waived"
+				},
+				"AccountPolicyItem": {
+					"title": "the array of account policy items",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AccountPolicyItem"
+					},
+					"description": "the list of rate states on the policy."
+				}
+			}
+		},
+		"AccountPolicyItem": {
+			"title": "the account policy item",
+			"type": "object",
+			"required": [
+				"PremiumAmount"
+			],
+			"properties": {
+				"CommissionRate": {
+					"title": "the commission rate",
+					"type": "string"
+				},
+				"PremiumAmount": {
+					"title": "the premium amount",
+					"type": "string"
+				},
+				"ItemType": {
+					"title": "the item type",
+					"type": "string",
+					"enum": [
+						"PR"
+					]
+				},
+				"LineOfBusienssCode": {
+					"title": "the line of business code",
+					"type": "string",
+					"enum": [
+						"CP",
+						"PRIMARY_CP"
+					]
+				}
+			}
+		},
+		"CPLineOfBusiness": {
+			"title": "the Commercial Property LOB. Genesys SecondaryProduct",
+			"type": "object",
+			"description": "the CP lob details",
+			"required": [
+				"RateState",
+				"LocationUnit",
+				"BuildingUnit"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information. Genesys SecondaryProduct/CoveragesInState/Coverage",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"LocationUnit": {
+					"title": "the location unit",
+					"type": "array",
+					"description": "the locations risk information. Genesys SecondaryProduct/LocationUnit",
+					"items": {
+						"$ref": "#/definitions/LocationUnit"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total CP premmium amount",
+					"type": "string",
+					"description": "the total CP written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CP amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CA overview amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CP tax amount",
+					"type": "string",
+					"description": "the CP tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CP surcharge amount",
+					"type": "string",
+					"description": "the CP surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CP fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"BuildingUnit": {
+					"title": "the building unit",
+					"type": "array",
+					"description": "the building risk information",
+					"items": {
+						"$ref": "#/definitions/BuildingUnit"
+					}
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"Incident": {
+					"title": "the incidents",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Incident"
+					}
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"ClassCode": {
+					"title": "Locations Class Code",
+					"type": "string",
+					"description": "Used for GarageKeepers location class code. CustomDetailsInState/CLS_CD_GKEEP_Code"
+				}
+			}
+		},
+		"CALineOfBusiness": {
+			"title": "the Commercial Auto LOB",
+			"type": "object",
+			"description": "the CA lob details",
+			"required": [
+				"RateState",
+				"VehicleUnit",
+				"ProgramCode"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total CA premmium amount",
+					"type": "string",
+					"description": "the total CA written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CA amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CA total amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CP tax amount",
+					"type": "string",
+					"description": "the CP tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CP surcharge amount",
+					"type": "string",
+					"description": "the CP surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CP fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"ProgramCode": {
+					"title": "the Commercial Auto Program Code",
+					"type": "string",
+					"enum": [
+						"CA1",
+						"CA4"
+					],
+					"description": "CA1 for Commercial Auto Program, CA4 for Hired Non-Owned Auto Program"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"VehicleUnit": {
+					"title": "the vehicle unit",
+					"type": "array",
+					"description": "the vehicle risk information",
+					"items": {
+						"$ref": "#/definitions/VehicleUnit"
+					}
+				},
+				"LocationUnit": {
+					"title": "the location unit",
+					"type": "array",
+					"description": "the location risk information",
+					"items": {
+						"$ref": "#/definitions/LocationUnit"
+					}
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"WCLineOfBusiness": {
+			"title": "the Workers Comp LOB",
+			"type": "object",
+			"description": "the WC lob details",
+			"required": [
+				"RateState",
+				"LocationUnit"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total WC premmium amount",
+					"type": "string",
+					"description": "the total WC written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the WC amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the WC overview amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the WC tax amount",
+					"type": "string",
+					"description": "the WC tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the WC surcharge amount",
+					"type": "string",
+					"description": "the WC surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the WC fee amount",
+					"type": "string",
+					"description": "the WC fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"LocationUnit": {
+					"title": "the location unit",
+					"type": "array",
+					"description": "the vehicle risk information",
+					"items": {
+						"$ref": "#/definitions/LocationUnit"
+					}
+				},
+				"NCCIRiskId": {
+					"title": "the risk id (ncci)",
+					"type": "string",
+					"description": "the NCCI Risk ID"
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"CGLineOfBusiness": {
+			"title": "the CGL LOB",
+			"type": "object",
+			"description": "the CGL details",
+			"required": [
+				"RateState",
+				"LocationUnit"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total CG premmium amount",
+					"type": "string",
+					"description": "the total CGL written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CG amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CG overview amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CG tax amount",
+					"type": "string",
+					"description": "the CG tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CG surcharge amount",
+					"type": "string",
+					"description": "the CG surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CG fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"PCOHazardBlanketCoverageDesc": {
+					"title": "CG2407 Products Completed Operations Hazard Blanket Coverage Description",
+					"type": "string",
+					"description": "Text that will fill in products completed ops redefined CG 24 07 form variable text.  Custom Detail PCO_HAZ_BLNKT_DESC."
+				},
+				"CyberPersonalInfoExclusionForm": {
+					"title": "Access/Disclosure of Personal Info. Exclusion form",
+					"type": "string",
+					"description": "The Personal Info Exclusion form number.",
+					"enum": [
+						"CG2106",
+						"CG2107",
+						"CG2108",
+						"CG2140"
+					]
+				},
+				"LocationUnit": {
+					"title": "the location unit",
+					"type": "array",
+					"description": "the vehicle risk information.  acord:GLLocInfo",
+					"items": {
+						"$ref": "#/definitions/LocationUnit"
+					}
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"CMLineOfBusiness": {
+			"title": "the Comml Inland Marine LOB",
+			"type": "object",
+			"description": "the CM details",
+			"required": [
+				"RateState",
+				"AccountsReceivableRiskUnit"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total CM premmium amount",
+					"type": "string",
+					"description": "the total CM written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CM amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CM overview totalamount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CM tax amount",
+					"type": "string",
+					"description": "the CM tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CM surcharge amount",
+					"type": "string",
+					"description": "the CM surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CM fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"AccountsReceivableRiskUnit": {
+					"title": "the AR risk unit",
+					"type": "array",
+					"description": "the AR risk information",
+					"items": {
+						"$ref": "#/definitions/AccountsReceivableRiskUnit"
+					}
+				},
+				"ValuablePapersAndRecordsRiskUnit": {
+					"title": "the ISO Valuable Papers and Records Risk Unit",
+					"description": "Valuable Papers and Records coverage form",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ValuablePapersAndRecordsRiskUnit"
+					}
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				}
+			}
+		},
+		"CRLineOfBusiness": {
+			"title": "the Crime LOB",
+			"type": "object",
+			"description": "the Crime lob details",
+			"required": [
+				"RateState",
+				"EmployeeRiskUnit",
+				"PremisesRiskUnit"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"WrittenAmount": {
+					"title": "the total CR policy premmium amount",
+					"type": "string",
+					"description": "the total CR written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CR amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CR overview amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CR tax amount",
+					"type": "string",
+					"description": "the CR tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CR surcharge amount",
+					"type": "string",
+					"description": "the CR surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CR fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"EmployeeRiskUnit": {
+					"title": "the employee risk unit",
+					"type": "array",
+					"description": "the risk information",
+					"items": {
+						"$ref": "#/definitions/EmployeeRiskUnit"
+					}
+				},
+				"PremisesRiskUnit": {
+					"title": "the premises risk unit",
+					"type": "array",
+					"description": "the risk info",
+					"items": {
+						"$ref": "#/definitions/PremisesRiskUnit"
+					}
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				}
+			}
+		},
+		"CULineOfBusiness": {
+			"title": "the Commercial Unbrella / Excess LOB",
+			"type": "object",
+			"description": "the Commercial Umbrella / Excess coverage form details",
+			"required": [
+				"RateState",
+				"HazardGradeCode"
+			],
+			"properties": {
+				"RateState": {
+					"title": "the comml rate state",
+					"description": "This aggregate contains a state and its state specific associated rating and underwriting information.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RateState"
+					}
+				},
+				"ReinsuranceTypeCode": {
+					"title": "the reinsurance type code",
+					"type": "string",
+					"description": "the line of business reinsurance type code.  TRTY is Treaty Only, Facultative Only is FAC, Net is NET, Facultative and Treaty is",
+					"enum": [
+						"TRTY",
+						"FAC",
+						"NET",
+						"TRTY_FAC"
+					]
+				},
+				"WrittenAmount": {
+					"title": "the total CU policy premmium amount",
+					"type": "string",
+					"description": "the total CU written premium amount"
+				},
+				"OverviewTotalAmount": {
+					"title": "the CU amount including taxes fees and surcharges",
+					"type": "string",
+					"description": "the CU overview amount. Genesys OVERVIEW_TOT_M"
+				},
+				"TaxAmount": {
+					"title": "the CU tax amount",
+					"type": "string",
+					"description": "the CU tax amount. Genesys /TAX_TOTAL_M"
+				},
+				"SurchargeAmount": {
+					"title": "the CU surcharge amount",
+					"type": "string",
+					"description": "the CU surcharge amount. Genesys /SURCHARGE_TOTAL_M"
+				},
+				"FeeAmount": {
+					"title": "the CU fee amount",
+					"type": "string",
+					"description": "the fee amount. Genesys /FEES_TOTAL_M"
+				},
+				"LineOfBusinessSpecificTypeCode": {
+					"title": "Line Of Business Specific Type",
+					"type": "string",
+					"enum": [
+						"U",
+						"E"
+					],
+					"description": "U for Umbrella specific type, E for Excess"
+				},
+				"GeneralLiabilityRiskUnit": {
+					"title": "the CG risk unit",
+					"type": "array",
+					"description": "the risk info",
+					"items": {
+						"$ref": "#/definitions/GeneralLiabilityRiskUnit"
+					}
+				},
+				"AutomobileLiabilityRiskUnit": {
+					"title": "the Automobile Liability risk unit",
+					"type": "array",
+					"description": "the risk info",
+					"items": {
+						"$ref": "#/definitions/AutomobileLiabilityRiskUnit"
+					}
+				},
+				"EmployersLiabilityRiskUnit": {
+					"title": "the Employers Liability risk unit",
+					"type": "array",
+					"description": "the risk info",
+					"items": {
+						"$ref": "#/definitions/EmployersLiabilityRiskUnit"
+					}
+				},
+				"OtherRiskUnit": {
+					"title": "the Other risk unit",
+					"type": "array",
+					"description": "the risk info",
+					"items": {
+						"$ref": "#/definitions/OtherRiskUnit"
+					}
+				},
+				"HazardGradeCode": {
+					"title": "the CU hazard grade",
+					"type": "string",
+					"enum": [
+						"1",
+						"4",
+						"7"
+					],
+					"description": "1= low, 4 = medium, 7 = high"
+				},
+				"CreditOrSurcharge": {
+					"title": "premium credit and debits",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditOrSurcharge"
+					}
+				},
+				"Form": {
+					"title": "the forms",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Form"
+					}
+				},
+				"IndustryGroupCode": {
+					"title": "Select the valid Industry Group",
+					"type": "string",
+					"enum": [
+						"01",
+						"10",
+						"15",
+						"20",
+						"40",
+						"48",
+						"49",
+						"50",
+						"52",
+						"60",
+						"70",
+						"93",
+						"99"
+					],
+					"description": "70 services, 01 Agricultrual, 48 Communication, 15 Contract Construction, 49 Electric Gas and Sanitary Serv, 60 Finance Insurance and Banking, 93 Governmental, 20 Manufacturing, 10 Mining, 52 Retail Trade, 40 Transportation, 50 Wholesale, 99 Not Applicable"
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"Location": {
+			"title": "the location",
+			"type": "object",
+			"description": "The 'Location' aggregate defines a geographic location. Genesys PrimaryProduct/SharedLocation",
+			"required": [
+				"LocationNumber",
+				"Address"
+			],
+			"properties": {
+				"LocationNumber": {
+					"title": "the location attach number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the location number for this location 01, 02, 03. Genesys Location/ATTACH_NBR_I"
+				},
+				"Address": {
+					"title": "the location address",
+					"type": "array",
+					"description": "the address associated with this locaiton",
+					"items": {
+						"$ref": "#/definitions/Address"
+					}
+				},
+				"Building": {
+					"type": "array",
+					"title": "location building(s)",
+					"description": "buildings at this locatin.",
+					"items": {
+						"$ref": "#/definitions/Building"
+					}
+				}
+			}
+		},
+		"RateState": {
+			"type": "object",
+			"required": [
+				"StateProvinceCode"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the rate state",
+					"type": "string",
+					"default": "KS",
+					"description": "state code for this commlRateState. Genesys @StateCode"
+				},
+				"Coverage": {
+					"title": "blanket coverages for rate state",
+					"type": "array",
+					"description": "State Level Coverages for this CommlRateState",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				},
+				"StateExceptionCode": {
+					"title": "Select the State Exception Indicator Code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7",
+						"8",
+						"9"
+					],
+					"description": "Required for MA and MD. State Exception Indicator Code. MA 1,2,3,4,5,6,7,9.  MD-1,2,3,4,5,6,8,9"
+				},
+				"HeadquartersLocationRef": {
+					"title": "the Headquarters Location Ref Number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the headquarters loction number reference"
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"Coverage": {
+			"type": "object",
+			"required": [
+				"CoverageCode"
+			],
+			"properties": {
+				"CoverageCode": {
+					"title": "the coverage code",
+					"type": "string",
+					"default": "BLDG",
+					"enum": [
+						"AGG_CSL",
+						"ANNL_PREM",
+						"AWY_PRMS",
+						"AWY_SCHED",
+						"BAIL_BOND1",
+						"BI_EA_ACC",
+						"BI_EA_EMP",
+						"BI_POL_LMT",
+						"BLDG",
+						"BLDG_BGI",
+						"BLDG_BGII",
+						"BLDG_COL",
+						"BLNKT_AI1",
+						"BLNKT_WVR",
+						"BPP",
+						"BPP_BGI",
+						"BPP_BGII",
+						"BPP_COL",
+						"BRDKNWCLM1",
+						"CGL",
+						"CGL_AGG",
+						"CGL_OCCR",
+						"CGL1",
+						"COLL",
+						"COMP",
+						"CYBER_AGG",
+						"CYBER_LIAB",
+						"DTEC",
+						"EA_OCCR",
+						"EMP_THFT_B",
+						"EMPL_LIAB",
+						"EQBKD5_PLT",
+						"EQBKD5_RFG",
+						"EQBKD5_SPL",
+						"EQUIP_BKD5",
+						"EXPER_MOD",
+						"EXPNS_CON",
+						"EXT_ENDR1",
+						"FGN_TRSM",
+						"FRA",
+						"GENL_AGG",
+						"GL",
+						"HRDNOWN",
+						"HVY",
+						"IDCP_ACCT",
+						"IDCP_BASE",
+						"IDCP_BEXT",
+						"IDCP_BINC",
+						"IDCP_BRND",
+						"IDCP_CDTA",
+						"IDCP_CHRD",
+						"IDCP_CLM",
+						"IDCP_CMPTR",
+						"IDCP_DEB",
+						"IDCP_EBINC",
+						"IDCP_EMP_D",
+						"IDCP_ENH",
+						"IDCP_EQUIP",
+						"IDCP_FAAEX",
+						"IDCP_FBINC",
+						"IDCP_FEEX",
+						"IDCP_FIEX",
+						"IDCP_FIRED",
+						"IDCP_FIREE",
+						"IDCP_FNART",
+						"IDCP_FORG",
+						"IDCP_GLS",
+						"IDCP_IMPRV",
+						"IDCP_INTR",
+						"IDCP_KEY",
+						"IDCP_MON",
+						"IDCP_MS_IN",
+						"IDCP_MSOUT",
+						"IDCP_NWART",
+						"IDCP_NWBIC",
+						"IDCP_NWBLD",
+						"IDCP_NWBPP",
+						"IDCP_NWCMP",
+						"IDCP_NWCOM",
+						"IDCP_NWED",
+						"IDCP_ORD",
+						"IDCP_ORD1",
+						"IDCP_OUTDR",
+						"IDCP_PBPP",
+						"IDCP_PERS",
+						"IDCP_PKSN",
+						"IDCP_PLTN",
+						"IDCP_RWRD",
+						"IDCP_SECU",
+						"IDCP_SIGNS",
+						"IDCP_SPLG",
+						"IDCP_STRC",
+						"IDCP_SWR",
+						"IDCP_THFT",
+						"IDCP_TOOL",
+						"IDCP_TRNS",
+						"IDCP_UNATH",
+						"IDCP_UTIL",
+						"IDCP_UTIL1",
+						"IDCP_VPAP",
+						"ILF_TBL1",
+						"ILF_TBL2",
+						"ILF_TBL3",
+						"ILF_TBLA",
+						"ILF_TBLB",
+						"ILF_TBLC",
+						"LAYER1",
+						"LAYER2",
+						"LAYER3",
+						"LAYER4",
+						"LAYER5",
+						"LIAB",
+						"LIAB_BIPRD",
+						"LIQ",
+						"LIQ_AGG",
+						"LIQ_LIAB",
+						"LIQ_OCCR",
+						"LOC_DED",
+						"WND_DED",
+						"LT",
+						"MAN_PREM",
+						"MDM",
+						"MED",
+						"MED_LOC",
+						"MIN_PREM_P",
+						"MOD_PREM",
+						"MWUA",
+						"MP",
+						"NF",
+						"NI_SCHED",
+						"NOWN_TRLR",
+						"OCCR_CSL",
+						"OTH_VEH",
+						"PERS_AD",
+						"PERS_CSL",
+						"PRD",
+						"PREM_DISC",
+						"PRMS",
+						"PRMS_PROP",
+						"PRMS_RENT",
+						"PRMS_SCHED",
+						"PROD",
+						"PROD_CPT",
+						"PROD_CSL",
+						"PRVCY_BRCH",
+						"PVT_PSGR",
+						"RGLT_PROC",
+						"RSN_EXPNS1",
+						"SBJ_PREM",
+						"SCHED_MOD",
+						"SCHED_NI",
+						"SPEC_WVR",
+						"STK",
+						"STK_BGI",
+						"STK_BGII",
+						"STK_COL",
+						"STNDRD_PRM",
+						"TE",
+						"TE_BGI",
+						"TE_BGII",
+						"TE_COL",
+						"TECH_COMB",
+						"THF_MON_B1",
+						"THFT_MON_B",
+						"THR_LIAB",
+						"TNT_BGI",
+						"TNT_BGII",
+						"TNT_COL",
+						"TNT_IMPROV",
+						"TNT_LIAB1",
+						"TOW",
+						"TRK_TRLR",
+						"TRSM",
+						"TRSM_BLDG",
+						"TRSM_BPP",
+						"TRSM_PCO",
+						"TRSM_PRMS",
+						"TRSM_STK",
+						"TRSM_TE",
+						"TRSM_TERR",
+						"UIM_BI",
+						"UIM_PRD",
+						"UM_BI",
+						"UM_PRD",
+						"UM_UIM",
+						"UNINT_HAZ1",
+						"VLTR_PD1",
+						"WC_CLS_CD",
+						"WC_ENDR_2",
+						"WVR_SUBR1",
+						"XHVY",
+						"YOUR_PRMS",
+						"YOUR_SCHED",
+						"ZON",
+						"HNOA_LIAB",
+						"HNOA_SCHED",
+						"HNOA_LYR1",
+						"HNOA_LYR2",
+						"HNOA_LYR3",
+						"HNOA_LYR4"
+					],
+					"description": "valid coverage code for the provided coverage element. Genesys Coverage/COVERAGE_ID_CODE | SubCoverage Coverage/COVERAGE_ID_CODE"
+				},
+				"CoverageDescription": {
+					"title": "the coverage description",
+					"type": "string",
+					"description": "COVERAGE_ID_TEXT"
+				},
+				"ParentCoverageCode": {
+					"title": "the parent coverage",
+					"type": "string",
+					"description": "the parent coverage code only if sub coverage. Genesys ../COVERAGE_ID_CODE"
+				},
+				"LocationRef": {
+					"title": "the location reference",
+					"type": "string",
+					"description": "the location reference for HNOA_SCHED. Genesys ..Coverage/CustomDetailsInState/LOC_NUM_Identifier"
+				},
+				"RateFactorIndicator": {
+					"title": "specific tentative rate included",
+					"type": "string",
+					"description": "Indicate if Tentative Rate was entered, the Genesys TENT_RT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"RateFactor": {
+					"title": "specific tentative rate",
+					"type": "string",
+					"description": "the Genesys SPECIFIC_TENT_RATE"
+				},
+				"UnderlyingRateFactor": {
+					"title": "Enter the Underlying Rate Factor",
+					"type": "string",
+					"description": "the underlying rate factor"
+				},
+				"UnderlyingPremium": {
+					"title": "Enter the Final Underlying Premium",
+					"type": "string",
+					"description": "the final underlying premium"
+				},
+				"WrittenAmount": {
+					"title": "the total Coverage premmium amount",
+					"type": "string",
+					"description": "the total Coverage written premium amount"
+				},
+				"AdjustmentFactor": {
+					"title": "the coverage adjustment factor",
+					"type": "string",
+					"description": "the coverage adjustment factor. Genesys Coverage/ADJUSTMENT_FACTOR"
+				},
+				"LimitAmountCode": {
+					"title": "the limit amount code",
+					"type": "string",
+					"default": "25,000",
+					"enum": [
+						"25,000",
+						"25,000/50,000",
+						"30,000/60,000",
+						"50,000/100,000",
+						"60,000",
+						"100,000",
+						"100,000/300,000",
+						"100,000/500,000",
+						"125,000",
+						"150,000",
+						"200,000",
+						"250,000",
+						"250,000/250,000",
+						"250,000/500,000",
+						"300,000",
+						"300,000/300,000",
+						"350,000",
+						"350,000/350,000",
+						"400,000"
+					],
+					"description": "coverage limit amount code.  Genesys Coverage/LIMIT_VAL_ID1_CODE"
+				},
+				"LimitAmount": {
+					"title": "the per occurrence limit amount",
+					"type": "string",
+					"default": "10,001",
+					"description": "free form limit amount field. Genesys Coverage/LIMIT_AMT1"
+				},
+				"LimitAmount2": {
+					"title": "the aggergate limit amount print field",
+					"type": "string",
+					"default": "10,001",
+					"description": "free form limit amount field. Genesys Coverage/LIMIT_AMT2"
+				},
+				"DeductibleAmountCode": {
+					"title": "the deductible amount code",
+					"type": "string",
+					"default": "500",
+					"enum": [
+						"FULL",
+						"50",
+						"100",
+						"250",
+						"500",
+						"1000",
+						"2500",
+						"5000",
+						"10000",
+						"25000",
+						"50000",
+						"75000",
+						"1%",
+						"2%",
+						"5%"
+					],
+					"description": "valid deductible amount code 500 1000 500 CSL. Genesys Coverage/DEDUCT_VAL_ID1_CODE"
+				},
+				"DeductibleTypeCode": {
+					"title": "the deductible type",
+					"type": "string",
+					"default": "BI Per Occurrence",
+					"enum": [
+						"BI Per Occurrence",
+						"BI Per Claim",
+						"PD Per Occurrence",
+						"PD Per Claim",
+						"BI/PD Combined Per Occurrence",
+						"BI/PD Combined Per Claim"
+					],
+					"description": "Genesys Coverage/DEDUCT_VAL_TYP_ID1_CODE"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "0532",
+					"enum": [
+						"16900",
+						"16910",
+						"0541",
+						"0532"
+					],
+					"description": "Genesys Coverage/CLASS_CODE_COV_CODE"
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string",
+					"description": "the sub class code indicator for this class code."
+				},
+				"EstimatedExposureAmount": {
+					"title": "the estimated exposure amount",
+					"type": "string",
+					"default": "0.00",
+					"description": "the estimated exposure amount i.e. Payroll amount. Genesys Coverage/EST_EXPOSURE_AMT"
+				},
+				"ValuationCode": {
+					"title": "the valuation code",
+					"type": "string",
+					"default": "REPC",
+					"enum": [
+						"REPC",
+						"ACV",
+						"FUNC_BLDG"
+					],
+					"description": "Genesys Coverage/VALUATION_C_CODE"
+				},
+				"SpecifiedCauseOfLossCode": {
+					"title": "the specified cause of loss",
+					"type": "string",
+					"default": "SPECIAL",
+					"enum": [
+						"SPECIAL",
+						"BASIC",
+						"BROAD"
+					],
+					"description": "Genesy Coverage/CAUSE_OF_LOSS_C_CODE"
+				},
+				"CoinsurancePercentage": {
+					"title": "the coinsurance percent",
+					"type": "number",
+					"description": "the coinsurance percent"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"description": "the territory code for this coverage. Genesys Coverage/TERRITORY_ID_CODE",
+					"default": "1"
+				},
+				"RateIdCode": {
+					"type": "string",
+					"description": "the property rating identification method specific vs. class.  1 - Non-Blnkt - Schedule Rated NBL_SCHED, 2 - Non-Blnkt - Class-No Subst NBL_CL_NSB, 3 - Non-Blknt - Class-Subst NBL_CL_SUB, 4 - Non-Blnkt - Spklrd - Sched NBL_SP_SCH, 5 - Blnkt - Schedule Rated BL_SCHED, 6 - Blnkt - Class - No Subst BL_CL_NSB, 7 - Blnkt - Class - Subst BL_CL_SUB, 8 - Blnkt - Spklrd - Sched BL_SP_SCH",
+					"enum": [
+						"NBL_SCHED",
+						"NBL_CL_NSB",
+						"NBL_CL_SUB",
+						"NBL_SP_SCH",
+						"BL_SCHED",
+						"BL_CL_NSB",
+						"BL_CL_SUB",
+						"BL_SP_SCH"
+					]
+				},
+				"AutoSymbol1Code": {
+					"title": "auto symbol 1 code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"19",
+						"21",
+						"22",
+						"23",
+						"24",
+						"27",
+						"28",
+						"29",
+						"32",
+						"33",
+						"34",
+						"41",
+						"42",
+						"43",
+						"46",
+						"47",
+						"51",
+						"52",
+						"59",
+						"61",
+						"62",
+						"63",
+						"64",
+						"67",
+						"68",
+						"71",
+						"72",
+						"73",
+						"74",
+						"79"
+					]
+				},
+				"AutoSymbol2Code": {
+					"title": "auto symbol 2 code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"19",
+						"21",
+						"22",
+						"23",
+						"24",
+						"27",
+						"28",
+						"29",
+						"32",
+						"33",
+						"34",
+						"41",
+						"42",
+						"43",
+						"46",
+						"47",
+						"51",
+						"52",
+						"59",
+						"61",
+						"62",
+						"63",
+						"64",
+						"67",
+						"68",
+						"71",
+						"72",
+						"73",
+						"74",
+						"79"
+					]
+				},
+				"AutoSymbol3Code": {
+					"title": "auto symbol 3 code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"19",
+						"21",
+						"22",
+						"23",
+						"24",
+						"27",
+						"28",
+						"29",
+						"32",
+						"33",
+						"34",
+						"41",
+						"42",
+						"43",
+						"46",
+						"47",
+						"51",
+						"52",
+						"59",
+						"61",
+						"62",
+						"63",
+						"64",
+						"67",
+						"68",
+						"71",
+						"72",
+						"73",
+						"74",
+						"79"
+					]
+				},
+				"AutoSymbol4Code": {
+					"title": "auto symbol 4 code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"19",
+						"21",
+						"22",
+						"23",
+						"24",
+						"27",
+						"28",
+						"29",
+						"32",
+						"33",
+						"34",
+						"41",
+						"42",
+						"43",
+						"46",
+						"47",
+						"51",
+						"52",
+						"59",
+						"61",
+						"62",
+						"63",
+						"64",
+						"67",
+						"68",
+						"71",
+						"72",
+						"73",
+						"74",
+						"79"
+					]
+				},
+				"AnnualDeliveryReceipts": {
+					"title": "the annual delivery receipts for this coverage",
+					"type": "string",
+					"description": "Annual Delivery Receipts for coverage"
+				},
+				"ManualPremium": {
+					"title": "the manual premium amount for this coverage",
+					"type": "string",
+					"description": "manual premium amount for coverage"
+				},
+				"HazardGradeCode": {
+					"title": "cyber hazard grade code",
+					"type": "string",
+					"description": "the cyber hazard grade code.  Low is 1 Medium is 2, High is 3, Excluded is 4",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					]
+				},
+				"AnnualRevenueAmount": {
+					"title": "annual revenue amount",
+					"type": "string",
+					"description": "the total annual revenue amount CGL Cyber Liab Custom Detail, ANN_RVNU1"
+				},
+				"FirstPartyOnlyIndicator": {
+					"title": "First Party Only Indicator",
+					"type": "string",
+					"description": "the First Party Only Indicator for cyber.  Cyber Liab FPRTY_ONLY_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"NumberOfEmployees": {
+					"title": "the number of employees",
+					"type": "string",
+					"description": "the number of employees needed for EBL & NOA HiredAuto  coverages custom detail - NUM_EMP"
+				},
+				"RetroactiveEffectiveDate": {
+					"title": "Enter the Retroactive Effective Date",
+					"type": "string",
+					"description": "The EBL Retroactive Date."
+				},
+				"RightToRecoverFromOtherPrintName": {
+					"title": "Enter name to print on Our Right to Recover From Others Endorsement",
+					"type": "string"
+				},
+				"RightToRecoverFromOtherTypeCode": {
+					"title": "Is the above name a person or organization?",
+					"type": "string",
+					"enum": [
+						"PERS",
+						"ORG"
+					]
+				},
+				"ExclusionEndorsementOwnerName": {
+					"title": "Enter Ownership Exclusion Schedule Owner Name",
+					"type": "string",
+					"description": "Ownership Exclusion Schedule Owner Name. ProductUnit/CoverageInState/CoverageCategory/Coverage[COVERAGE_CODE = 'SPEC_WVR']/SubCoverage[COVERAGE_CODE = 'WVR_SCHED']/CustomDetailsInState/RGHT_RCVR_NAME"
+				},
+				"ExclusionEndorsementOwnershipTypeCode": {
+					"title": "Ownership Exclusion Schedule Owner Type",
+					"type": "string",
+					"enum": [
+						"PARTNER",
+						"OFFICER",
+						"OTHER",
+						"LLC"
+					],
+					"description": "ProductUnit/CoverageInState/CoverageCategory/Coverage[COVERAGE_CODE = 'WC_ENDR_2']/SubCoverage[COVERAGE_CODE = 'SCHED_2']/CustomDetailsInState/NAM2"
+				},
+				"EquipmentBreakdownOccupancyCode": {
+					"title": "Equipment Breakdown Occupancy",
+					"type": "string",
+					"enum": [
+						"RESTAURANT",
+						"STORE_RET",
+						"BAKERIES",
+						"MERCHANDIS"
+					],
+					"description": "The equipment breakdown occupancy type CP .  Restaurant, Store, Retail and Wholesale - STORE_RET, Bakeries - BAKERIES, Merchandise Stores, etc. - MERCHANDIS"
+				},
+				"NonownershipRiskTypeCode": {
+					"title": "Select the type of Non-ownership Risk",
+					"type": "string",
+					"enum": [
+						"OTH",
+						"TECH_LIF",
+						"FIN_SERV",
+						"SOC_SERV",
+						"RIC"
+					],
+					"description": "used for hired owned auto NOWN_LIAB coverage for the NOWNSHP_RSK_TYP custom detail use OTH for All Other Liability."
+				},
+				"CostOfHire": {
+					"title": "Enter the cost of hire",
+					"type": "string",
+					"description": "the COST_HIRE custom detail on HRD_AUTO coverage"
+				},
+				"LocalTaxName": {
+					"title": "Enter the local tax name",
+					"type": "string",
+					"description": "Enter Name of Tax for Dec Print.  Used for KY local tax coverage."
+				},
+				"TFSAmount": {
+					"title": "Enter Taxes Fees Surcharge Amount",
+					"type": "string",
+					"description": "The Taxes Fees Surcharge manually rated coverage premium amount."
+				},
+				"BlanketDescription": {
+					"title": "Enter Blanket Description",
+					"type": "string",
+					"description": "The Blanket Description for Form Text"
+				},
+				"EmployerTypeCode": {
+					"title": "Select Type of Employer",
+					"type": "string",
+					"description": "WC_SRCHG custom detail for MA",
+					"enum": [
+						"PRIVATE",
+						"PUBLIC",
+						"SELF",
+						"SELF_OUT"
+					]
+				},
+				"BPPTenantsImprovementsPropertyTypeCode": {
+					"title": "Tenents Improvement Property Type",
+					"type": "string",
+					"description": "genesys TNT_IMPROV_PROP",
+					"enum": [
+						"BLDG",
+						"PER_PROP"
+					]
+				},
+				"EmployersLiabilityAppliesCode": {
+					"title": "Employers Liability Applices Indicator",
+					"type": "string",
+					"description": "genesys EMPL_LIAB_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"MineSubsidenceStructureCode": {
+					"title": "Mine Subsidence",
+					"type": "string",
+					"enum": [
+						"DWLG_1",
+						"DWLG_2",
+						"NONDWLG_1",
+						"NONDWLG_2",
+						"FRAME_1",
+						"ALLOTHER_1"
+					]
+				},
+				"PayrollAmount": {
+					"title": "Payroll Amount",
+					"type": "string",
+					"description": "Payroll Amount sent as an enterable field and the value is the sum of the values for the various payroll types in the state for the employees (sum of all the values for locations within that state)"
+				},
+				"RatingBasis": {
+					"title": "Select Rating Basis",
+					"type": "string",
+					"description": "Garagekeepers Comp & coll rating basis.  Genesys SEL_RTG_BS_Code",
+					"enum": [
+						"LGL_LIAB",
+						"DIR_PRIM",
+						"DIR_EXCS"
+					]
+				},
+				"NumberOfPlateSets": {
+					"title": "Enter the number of plate sets",
+					"type": "string",
+					"description": "Registation Plates coverage. Genesys NUM_PLAT"
+				},
+				"RepairPercent": {
+					"title": "Repair Percentage",
+					"type": "string",
+					"description": "Auto Aftermarket endorsement repair percentage. Genesys RPR_PCT_Code",
+					"enum": [
+						"75",
+						"100"
+					]
+				},
+				"RatingFactor": {
+					"title": "Rating Factor",
+					"type": "string",
+					"description": "Auto Aftermarket Auto Endorsement rating factor. Genesys RTG_FCTR"
+				},
+				"AggregateLimitCode": {
+					"title": "Aggregate Limit",
+					"type": "string",
+					"description": "Aggregate Limit code for Auto Aftermarket On-Hook and EandO",
+					"enum": [
+						"1X",
+						"2X"
+					]
+				},
+				"BusinessIncomeTimePeriodAppliesCode": {
+					"title": "If Business Income Time Period applies - select the Time Period",
+					"type": "string",
+					"description": "If Business Income Time Period applies - select the Time Period.  Use 0 for \"no waiting period\"",
+					"enum": [
+						"24",
+						"48",
+						"72",
+						"0"
+					]
+				}
+			}
+		},
+		"Building": {
+			"title": "the building",
+			"type": "object",
+			"required": [
+				"BuildingNumber",
+				"LocationRef",
+				"YearBuilt"
+			],
+			"properties": {
+				"BuildingNumber": {
+					"title": "the building number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the building attach number for this building. Genesys PrimaryProduct/SharedLocation/SharedBuilding/ATTACH_NBR_I"
+				},
+				"NumberOfStories": {
+					"title": "the Number of Stories",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "Number of stores for this building. Genesys PrimaryProduct/SharedLocation/SharedBuilding/NBR_OF_STORIES"
+				},
+				"LocationRef": {
+					"title": "location number reference",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the location this building is associated with Premises 1 Building.PrimaryProduct/SharedLocation/ATTACH_NBR_I"
+				},
+				"YearBuilt": {
+					"title": "the year built",
+					"type": "integer",
+					"format": "int32",
+					"default": 2016,
+					"description": "year the building was built. Genesys PrimaryProduct/SharedLocation/SharedBuilding/UNIT_YEAR"
+				}
+			}
+		},
+		"Vehicle": {
+			"type": "object",
+			"title": "vehicle",
+			"required": [
+				"VehicleNumber",
+				"ModelYear",
+				"Manufacturer",
+				"Model",
+				"LocationRef",
+				"StateProvinceCode"
+			],
+			"properties": {
+				"VehicleNumber": {
+					"title": "the vehicle number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "attach number for this vehicle. Genesys PrimaryProduct/SharedVehicle/ATTACH_NBR_I"
+				},
+				"ModelYear": {
+					"title": "the Year",
+					"type": "integer",
+					"format": "int32",
+					"default": 2010,
+					"description": "PrimaryProduct/SharedVehicle/ATTACH_NBR_I"
+				},
+				"Manufacturer": {
+					"title": "the Manufacturer / Maker",
+					"type": "string",
+					"default": "Ford",
+					"description": "PrimaryProduct/SharedVehicle/MAKE_T"
+				},
+				"Model": {
+					"title": "the Model",
+					"type": "string",
+					"default": "F-150",
+					"description": "PrimaryProduct/SharedVehicle/MODEL_T"
+				},
+				"LocationRef": {
+					"title": "the location number (garaging location)",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "garaging location number for this vehicle.  PrimaryProduct/SharedVehicle/AddressAssociation/AddressAttachNumber"
+				},
+				"VIN": {
+					"title": "the vin",
+					"type": "string",
+					"default": "1234567789",
+					"description": "the vehicle Identification number.  PrimaryProduct/SharedVehicle/IDENTIFICATION_TXT"
+				},
+				"StateProvinceCode": {
+					"title": "the state",
+					"type": "string",
+					"default": "KS",
+					"description": "PrimaryProduct/SharedVehicle/STATE_CODE_CODE"
+				}
+			}
+		},
+		"Driver": {
+			"title": "driver",
+			"type": "object",
+			"description": "This contains personal information about the drivers. This would include specific information unique to commercial drivers.",
+			"required": [
+				"DriverNumber",
+				"LicenseState"
+			],
+			"properties": {
+				"DriverNumber": {
+					"title": "the driver number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "driver attach number.  DriverAssociation/DriverAttachNumber"
+				},
+				"DriverFirstName": {
+					"title": "the first name",
+					"type": "string",
+					"default": "first",
+					"description": "driver first name. Driver/Name/NameItem/NAME_FIRST"
+				},
+				"DriverLastName": {
+					"title": "the last name",
+					"type": "string",
+					"default": "last",
+					"description": "driver last name. Driver/Name/NameItem/NAME_LAST"
+				},
+				"DriverAge": {
+					"title": "the driver age",
+					"type": "integer",
+					"format": "int32",
+					"default": 45,
+					"description": "driver age calculation. Driver/DRIVER_AGE"
+				},
+				"GenderCode": {
+					"title": "the driver gender",
+					"type": "string",
+					"default": "M",
+					"enum": [
+						"M",
+						"F"
+					],
+					"description": "Gender code. Driver/Name/GENDER_CODE"
+				},
+				"LicenseState": {
+					"title": "the driver license state",
+					"type": "string",
+					"default": "KS",
+					"description": "Driver License State. Driver/Name/DRIVER_LICENSE_ST_CODE"
+				},
+				"LicensePermitNumber": {
+					"title": "the driver license number",
+					"type": "string",
+					"default": "12346567-JJ3",
+					"description": "Driver License Number. Driver/Name/DRIVER_LICENSE_NBR"
+				},
+				"LicenseExpirationDate": {
+					"title": "the driver license expiration",
+					"type": "string",
+					"format": "date-time",
+					"description": "the driver's license expiration date. Driver/DRIVER_LIC_EXP"
+				},
+				"MaritalStatusCode": {
+					"title": "the driver maritial status",
+					"type": "string",
+					"default": "M",
+					"enum": [
+						"M",
+						"S"
+					],
+					"description": "Driver Marital Status Code for this drvier. Driver/Name/MARITAL_STATUS_CODE"
+				},
+				"BirthDt": {
+					"title": "the driver date of birth",
+					"type": "string",
+					"format": "date-time",
+					"default": "1980-01-01T00:00:00Z",
+					"description": "Driver Birth Date. Driver/Name/BIRTH_DATE"
+				}
+			}
+		},
+		"Account": {
+			"title": "the bill account",
+			"type": "object",
+			"required": [
+				"accountType",
+				"clientCoreID",
+				"clientCoreAddID",
+				"clientCoreSeq",
+				"companyID",
+				"effectiveDate",
+				"dueDay",
+				"stateCode"
+			],
+			"properties": {
+				"accountNumber": {
+					"title": "billing account number",
+					"type": "string",
+					"description": "billing account number for this account. FAB acct-info-dO/account-no"
+				},
+				"accountType": {
+					"title": "bill type",
+					"type": "string",
+					"default": "DB",
+					"enum": [
+						"DB",
+						"AB"
+					],
+					"description": "Direct Bill DB. FAB acct-info-dO/acct-type"
+				},
+				"clientCoreID": {
+					"title": "payor id",
+					"type": "string",
+					"description": "the payor client ID. FAB acct-info-dO/payor-id"
+				},
+				"clientCoreSeq": {
+					"title": "payor seq id",
+					"type": "string",
+					"description": "the payor client sequence number. FAB payor-id/payor-seq-no"
+				},
+				"clientCoreAddID": {
+					"title": "payor address id",
+					"type": "string",
+					"description": "the payor client address id. FAB acct-info-dO/payor-address-id"
+				},
+				"companyID": {
+					"title": "the company id",
+					"type": "string",
+					"enum": [
+						"59"
+					],
+					"description": "the General Ledger company id, used to determine different fees and surcharges by company. FAB acct-info-dO/GLCompanyCode."
+				},
+				"effectiveDate": {
+					"title": "account effective date",
+					"type": "string",
+					"default": "2016-10-01",
+					"description": "the account effective date. FAB acct-info-dO/account-effective-dt"
+				},
+				"dueDay": {
+					"title": "payment due day",
+					"type": "integer",
+					"default": 15,
+					"description": "the payment due date. FAB /acct-info-dO/payment-due-day"
+				},
+				"stateCode": {
+					"title": "account state",
+					"type": "string",
+					"default": "KS",
+					"description": "the account GL state code. FAB /acct-info-dO/state-code"
+				}
+			}
+		},
+		"Client": {
+			"title": "client",
+			"type": "object",
+			"description": "the Policy Holder, Insured, Client information",
+			"required": [
+				"ClientOwner",
+				"Name",
+				"Address"
+			],
+			"properties": {
+				"ClientId": {
+					"title": "the client id",
+					"type": "string",
+					"default": "",
+					"description": "ClientCore TFGClientQuickAddResultXMLDO/client/client_id"
+				},
+				"Name": {
+					"title": "the clients names",
+					"type": "array",
+					"description": "Client names",
+					"items": {
+						"$ref": "#/definitions/Name"
+					}
+				},
+				"ClientOwner": {
+					"title": "the client owner",
+					"type": "string",
+					"default": "IDIALL",
+					"description": "the ClientCore TFGClientQuickAddResultXMLDO/client/group-owner-info-dO/user-group-code"
+				},
+				"TaxId": {
+					"title": "client taxid",
+					"type": "string",
+					"description": "client tax id value"
+				},
+				"TaxIdType": {
+					"title": "client tax id type",
+					"type": "string",
+					"enum": [
+						"FEIN",
+						"TAX_ID"
+					]
+				},
+				"Address": {
+					"title": "the client addresses",
+					"type": "array",
+					"description": "ClientCore TFGClientQuickAddResultXMLDO/address-do",
+					"items": {
+						"$ref": "#/definitions/Address"
+					}
+				},
+				"Communication": {
+					"title": "the client communications",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Communication"
+					}
+				}
+			}
+		},
+		"Communication": {
+			"type": "object",
+			"required": [
+				"Type",
+				"Value"
+			],
+			"properties": {
+				"CommunicationId": {
+					"type": "string",
+					"description": "Communication Identifier per each communication item in array"
+				},
+				"Value": {
+					"type": "string"
+				},
+				"Type": {
+					"type": "string",
+					"enum": [
+						"PHONE_NUM",
+						"EMAIL_ADDR"
+					]
+				}
+			}
+		},
+		"Name": {
+			"type": "object",
+			"properties": {
+				"BusinessName": {
+					"title": "the business name",
+					"type": "string",
+					"default": "Business Name",
+					"description": "ClientCore TFGClientQuickAddResultXMLDO/client/names/name_business"
+				},
+				"BusinessNameSequenceNumber": {
+					"title": "the business name seq number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "ClientCore TFGClientQuickAddResultXMLDO/client/names/@seq_nbr"
+				},
+				"BusinessNameType": {
+					"title": "the business name type",
+					"type": "string",
+					"enum": [
+						"NTLEGAL",
+						"NTDBA",
+						"NTOther"
+					]
+				},
+				"Primary": {
+					"title": "display flag",
+					"type": "string",
+					"enum": [
+						"Y",
+						"N"
+					]
+				}
+			}
+		},
+		"Address": {
+			"type": "object",
+			"required": [
+				"StateProvinceCode"
+			],
+			"properties": {
+				"AddressId": {
+					"title": "the address id",
+					"type": "string",
+					"description": "ClientCore TFGClientQuickAddResultXMLDO/address-do/address_id"
+				},
+				"AddressLine1": {
+					"title": "the address line 1",
+					"type": "string",
+					"maxLength": 40,
+					"description": "TFGClientQuickAddResultXMLDO/address-do/address1"
+				},
+				"AddressLine2": {
+					"title": "the address line 2",
+					"type": "string",
+					"maxLength": 40,
+					"description": "TFGClientQuickAddResultXMLDO/address-do/address2"
+				},
+				"City": {
+					"type": "string",
+					"title": "the city",
+					"maxLength": 40,
+					"description": "TFGClientQuickAddResultXMLDO/address-do/city"
+				},
+				"StateProvinceCode": {
+					"title": "the state",
+					"type": "string",
+					"description": "TFGClientQuickAddResultXMLDO/address-do/state_prov_cd"
+				},
+				"PostalCode": {
+					"title": "the postal code / zip",
+					"type": "string",
+					"description": "TFGClientQuickAddResultXMLDO/address-do/postal_code"
+				},
+				"County": {
+					"title": "the county",
+					"type": "string",
+					"description": "TFGClientQuickAddResultXMLDO/address-do/county"
+				}
+			}
+		},
+		"MsgStatus": {
+			"title": "message status",
+			"type": "object",
+			"required": [
+				"MsgStatusCode"
+			],
+			"properties": {
+				"MsgStatusCode": {
+					"title": "the message status code",
+					"type": "string",
+					"enum": [
+						"SUCCESS",
+						"ERROR"
+					],
+					"description": "indicator if the overall transaction was successful. Genesys requestedTransSuccessfulInd = 'true'"
+				},
+				"MsgErrorCd": {
+					"title": "the message error code",
+					"type": "string",
+					"enum": [
+						"DataInvalid",
+						"DataMissing"
+					],
+					"description": "If rating is unsuccessful then DataInvalid.  If Load unsuccessful then DataMissing. Genesys subProcessResults[processInstanceName = 'CPL_RATE' ]/requestedTransSuccessfulInd = 'false'"
+				},
+				"MsgStatusDesc": {
+					"title": "the message status description",
+					"type": "string",
+					"description": "Genesys /MsgErrorDesc"
+				},
+				"ExtendedStatus": {
+					"title": "detailed messages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ExtendedStatus"
+					},
+					"description": "Genesys subProcessResults"
+				}
+			}
+		},
+		"ExtendedStatus": {
+			"title": "the extended status",
+			"type": "object",
+			"properties": {
+				"ExtendedStatusCode": {
+					"title": "extended status code",
+					"type": "string",
+					"description": "Load_Status, Edit, StepStatus"
+				},
+				"ExtendedStatusDesc": {
+					"title": "extended status description",
+					"type": "string"
+				}
+			}
+		},
+		"LocationUnit": {
+			"title": "the location unit",
+			"type": "object",
+			"description": "location Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"LocationRef",
+				"StateProvinceCode",
+				"Coverage"
+			],
+			"properties": {
+				"LocationRef": {
+					"title": "the location ref number",
+					"type": "integer",
+					"format": "int32",
+					"description": "the location number associated with this risk. Genesys LocationUnit/SharedLocation/ATTACH_NBR_I",
+					"default": 1
+				},
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. Genesys LocationUnit/STATE_CODE_CODE",
+					"default": "KS"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "230",
+					"description": "territory code for location. This is conditionally required for Comml Property & GL Location Units. Genesys LocationUnit/TERRITORY_ID_CODE"
+				},
+				"WrittenAmount": {
+					"title": "the total location premmium amount",
+					"type": "string",
+					"description": "the total written premium amount. Genesys LocationUnit/PREM_TOTAL_M"
+				},
+				"NumberOfEmployees": {
+					"title": "the number of employees",
+					"type": "string",
+					"description": "the number of employees at this location - CustomDetailsInState/NUM_EMP2"
+				},
+				"ProtectionClassCode": {
+					"title": "the protection class",
+					"type": "string",
+					"default": "PC_4",
+					"enum": [
+						"PC_1",
+						"PC_1X",
+						"PC_1Y",
+						"PC_2",
+						"PC_2X",
+						"PC_2Y",
+						"PC_3",
+						"PC_3X",
+						"PC_3Y",
+						"PC_4",
+						"PC_4X",
+						"PC_4Y",
+						"PC_5",
+						"PC_5X",
+						"PC_5Y",
+						"PC_6",
+						"PC_6X",
+						"PC_6Y",
+						"PC_7",
+						"PC_7X",
+						"PC_7Y",
+						"PC_8",
+						"PC_8B",
+						"PC_8X",
+						"PC_8Y",
+						"PC_9",
+						"PC_10",
+						"PC_10W"
+					],
+					"description": "This is the location protection class.  This is conditionally required for Comml Property LocationUnits.  Genesys LocationUnit/PROTECTION_CLASS_CODE"
+				},
+				"GroupIIZoneCode": {
+					"title": "the group II zone code",
+					"type": "string",
+					"description": "This is the location group II zone (wind class).  This is conditionally required for Comml Property LocationUnits.  Genesys LocationUnit/GRP_II_ZONE_C_CODE"
+				},
+				"CityCode": {
+					"title": "the city code",
+					"type": "string",
+					"description": "This is required when the city is Duluth, Minneapolis, Saint Paul, St. Paul or Rochester."
+				},
+				"BasicGroupIITerritoryCode": {
+					"title": "the basic group II territory code",
+					"type": "string",
+					"description": "This is the location basic group II territory code.  This is conditionally required for Comml Property LocationUnits.  Genesys LocationUnit/BGII_TERR"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					},
+					"description": "Genesys LocationUnit/Coverage"
+				},
+				"AdditionalInterestAssociation": {
+					"title": "additional interest association",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AdditionalInterestAssociation"
+					}
+				},
+				"AddressWithinCityLimitsCode": {
+					"title": "Is the Address Within City Limits?",
+					"type": "string",
+					"description": "the addresswithin city limits ADR_CITY_LMT_Code",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"TaxLocationNumber": {
+					"title": "The Tax Location Number",
+					"type": "string",
+					"description": "Jackson, MS Territory Code 251 with Tax Location input"
+				}
+			}
+		},
+		"BuildingUnit": {
+			"title": "the Building Unit",
+			"type": "object",
+			"description": "Building Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"BuildingRef",
+				"LocationRef",
+				"ClassCode",
+				"SprinklerIndicator",
+				"BCEG",
+				"ConstructionCode",
+				"GroupIISymbol",
+				"Coverage",
+				"OccupancyType",
+				"RiskType"
+			],
+			"properties": {
+				"BuildingRef": {
+					"title": "the building ref number",
+					"type": "integer",
+					"format": "int32",
+					"description": "the building number associated with this risk. Genesys BuildingUnit/SharedBuilding/ATTACH_NBR_I",
+					"default": 1
+				},
+				"LocationRef": {
+					"title": "the location ref number",
+					"type": "integer",
+					"format": "int32",
+					"description": "the location number associated with this risk. BuildingUnit../LocationUnit/ATTACH_NBR_I",
+					"default": 1
+				},
+				"WrittenAmount": {
+					"title": "the total building premmium amount",
+					"type": "string",
+					"description": "the building written premium amount. BuildingUnit/PREM_TOTAL_M"
+				},
+				"Description": {
+					"title": "building description",
+					"description": "BuildingUnit/UNIT_DESC"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "0532",
+					"enum": [
+						"0562",
+						"0532",
+						"7391",
+						"01139"
+					],
+					"description": "the class code for this risk unit. Genesys BuildingUnit/CLASS_CODE_UNIT_CODE"
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string",
+					"description": "BuildingUnit/SUB_CLASS_CODE_UNT_CODE"
+				},
+				"BusinessIncomeTypeBusinessCode": {
+					"title": "Select Time Element Coverage Form",
+					"type": "string",
+					"enum": [
+						"BIANDEE",
+						"BIEXCLEE",
+						"EXTRAEXP"
+					]
+				},
+				"FloorSquareFootAmount": {
+					"title": "the building square foot amount",
+					"type": "string",
+					"description": "the building floor square foot amount"
+				},
+				"ISORiskId": {
+					"title": "the ISO Risk ID from propertyDataSearch",
+					"type": "string",
+					"description": "the ISO Risk ID value from ISO Prometrics property data search."
+				},
+				"ISOLossCostSurveyDate": {
+					"title": "ISO Loss Cost Survey Date (Fiche Date)",
+					"type": "string",
+					"description": "ISO Loss Cost Survey Date (Fiche Date) when rate factor is entered."
+				},
+				"OccupancyType": {
+					"type": "string",
+					"title": "bulding occupancy type",
+					"default": "MERC_NONMF",
+					"enum": [
+						"MERC_NONMF",
+						"RENTAL",
+						"MANUF_MIN",
+						"COMB_MFGMR",
+						"COMB_MRCRT",
+						"COMB_MFGRT"
+					],
+					"description": "Coverage[COVERAGE_ID_CODE = 'TE']/CustomDetailsInState/OCCUP_TYP_Code"
+				},
+				"RiskType": {
+					"type": "string",
+					"title": "building risk type",
+					"default": "MERC_LOW",
+					"enum": [
+						"MERC_LOW",
+						"MERC_MED",
+						"MERC_HIGH",
+						"OFFICE",
+						"MOT_HOT",
+						"SERVICE_H",
+						"SERVICE_L",
+						"INST_LOW",
+						"INST_HIGH",
+						"IND_PROC_L",
+						"IND_PROC_H",
+						"CONTRACT",
+						"APT_HSE"
+					],
+					"description": "BuildingUnit/CustomDetailsInState/RSK_TYP_2_Code"
+				},
+				"ActualLossSustainedCode": {
+					"title": "Indicate of Actual Loss Sustained Applies Code",
+					"type": "string",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"SprinklerIndicator": {
+					"title": "sprinkler indicator",
+					"type": "string",
+					"default": "No",
+					"enum": [
+						"Yes",
+						"No"
+					],
+					"description": "the indicator if this building has a sprinkler. BuildingUnit/SPRINKLERED_F"
+				},
+				"BCEG": {
+					"title": "Buiding Code Effectiveness Grading (BCEG)",
+					"type": "string",
+					"default": "99",
+					"enum": [
+						"99",
+						"01",
+						"02",
+						"03",
+						"04",
+						"05",
+						"06",
+						"07",
+						"08",
+						"09",
+						"10"
+					],
+					"description": "Building Code Effectiveness Grade.  IsoLocation lookup /locationServicesInfo/wrb-d/BldgCodeEffectivenessGrage/BldgCodeEffectivenessGradeCd. Genesys BuildingUnit/BCEG_CODE"
+				},
+				"ConstructionCode": {
+					"title": "the construction code",
+					"type": "string",
+					"default": "NON_CBST",
+					"enum": [
+						"FIRE_RSTV",
+						"FRAME",
+						"JOIST_MAS",
+						"NON_CBST",
+						"MASN_NONCB",
+						"MOD_FIRE",
+						"NA"
+					],
+					"description": "BuildingUnit/CONSTRUCTION_C_CODE"
+				},
+				"GroupIISymbol": {
+					"title": "the Group II Symbol",
+					"type": "string",
+					"default": "BGII_A",
+					"enum": [
+						"BGII_A",
+						"BGII_B",
+						"BGII_AB",
+						"BGII_AA"
+					],
+					"description": "the Group II Symbol for this building. Genesys BuildingUnit/GROUP_II_SYMBOL_CODE"
+				},
+				"ProtectionClassCode": {
+					"title": "the protection class",
+					"type": "string",
+					"default": "PC_4",
+					"enum": [
+						"PC_1",
+						"PC_1X",
+						"PC_1Y",
+						"PC_2",
+						"PC_2X",
+						"PC_2Y",
+						"PC_3",
+						"PC_3X",
+						"PC_3Y",
+						"PC_4",
+						"PC_4X",
+						"PC_4Y",
+						"PC_5",
+						"PC_5X",
+						"PC_5Y",
+						"PC_6",
+						"PC_6X",
+						"PC_6Y",
+						"PC_7",
+						"PC_7X",
+						"PC_7Y",
+						"PC_8",
+						"PC_8B",
+						"PC_8X",
+						"PC_8Y",
+						"PC_9",
+						"PC_10",
+						"PC_10W"
+					],
+					"description": "may not be required."
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					},
+					"description": "BuildingUnit/CoverageInState/Coverage"
+				},
+				"AdditionalInterestAssociation": {
+					"title": "additional interest association",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AdditionalInterestAssociation"
+					}
+				}
+			}
+		},
+		"VehicleUnit": {
+			"title": "the vehicle Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"VehicleRef",
+				"StateProvinceCode",
+				"ClassCode",
+				"TerritoryCode",
+				"Coverage",
+				"CostNewAmount",
+				"PlanCode"
+			],
+			"properties": {
+				"VehicleRef": {
+					"title": "the vehicle number",
+					"type": "integer",
+					"format": "int32",
+					"description": "the risk vehicle number associated with this risk. Genesys VehicleUnit/SharedVehicle/ATTACH_NBR_I",
+					"default": 1
+				},
+				"LocationRef": {
+					"title": "the location ref number",
+					"type": "integer",
+					"format": "int32",
+					"description": "the garage location number associated with this risk.",
+					"default": 1
+				},
+				"WrittenAmount": {
+					"title": "the total vehilce premmium amount",
+					"type": "string",
+					"description": "the vehicle written premium amount. VehicleUnit/PREM_TOTAL_M"
+				},
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. VehicleUnit/STATE_CODE_CODE",
+					"default": "KS"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "7391",
+					"enum": [
+						"7391",
+						"01139"
+					],
+					"description": "the class code for this risk unit. VehicleUnit/CLASS_CODE_UNIT_CODE"
+				},
+				"PlanCode": {
+					"title": "vehicle plan code",
+					"type": "string",
+					"enum": [
+						"PLAN1",
+						"PLAN2"
+					],
+					"description": "the vehicle type plan (private passenger vs tractor truck)"
+				},
+				"FleetTypeCode": {
+					"title": "vehicle fleet type indicator",
+					"type": "string",
+					"enum": [
+						"NON_FLT",
+						"FLT"
+					]
+				},
+				"VehicleOperatorUseCode": {
+					"title": "operator use code",
+					"type": "string",
+					"enum": [
+						"OTHR",
+						"LESS",
+						"MORE"
+					],
+					"description": "Not Driven to Work or School - OTHER, To or From Work Less than 15 miles - LESS, To or From Work Greater than or equal to 15 miles - MORE"
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string",
+					"description": "VehicleUnit/SUC_CLASS_CODE"
+				},
+				"CostNewAmount": {
+					"title": "the orginial cost new (OCN)",
+					"type": "string",
+					"description": "risk cost new amount. VehicleUnit/CustomDetailsInState/OCN"
+				},
+				"VehicleUsageBasisCode": {
+					"title": "vehicle usage basis code",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					],
+					"description": "CoverageInState/Coverage[COVERAGE_CODE = 'NF' ]/CustomDetailsInState/RTG_BS_PVT_PSGR3_Code.  1 = not furnished for regular use.  2 = furnished for regular use."
+				},
+				"SecondaryClassCode": {
+					"title": "secondary class code",
+					"type": "string",
+					"enum": [
+						"02",
+						"03",
+						"21",
+						"22",
+						"23",
+						"24",
+						"25",
+						"26",
+						"29",
+						"31",
+						"32",
+						"33",
+						"34",
+						"35",
+						"39"
+					]
+				},
+				"VehicleUseCode": {
+					"title": "vehicle use code",
+					"type": "string",
+					"enum": [
+						"SVC",
+						"RETL",
+						"COMM",
+						"NA"
+					]
+				},
+				"VehicleTypeCode": {
+					"title": "vehicle type",
+					"type": "string",
+					"enum": [
+						"LGHT_TRK",
+						"MED_TRK",
+						"HVY_TRK",
+						"XHVY_TRK",
+						"HVY_TT",
+						"XHVY_TT",
+						"SEMI_TRLR",
+						"TRLR",
+						"SVC_UT_TRL"
+					]
+				},
+				"RadiusUseTypeCode": {
+					"title": "radius use type",
+					"type": "string",
+					"enum": [
+						"LCL",
+						"INTMED",
+						"LNG_DST"
+					]
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "230",
+					"description": "territory code for risk unit. VehicleUnit/TERRITORY_ID_CODE"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					},
+					"description": "VehicleUnit/CoverageInState/Coverage"
+				},
+				"AdditionalInterestAssociation": {
+					"title": "additional interest association",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AdditionalInterestAssociation"
+					}
+				}
+			}
+		},
+		"EmployeeRiskUnit": {
+			"title": "the Crime Employee Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"ClassCode",
+				"TerritoryCode",
+				"StateProvinceCode",
+				"NumberOfEmployees",
+				"AccessToMoneyEmployees",
+				"NumberOfWatchPersons",
+				"Coverage"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk.  RiskUnit[ENTITY_C_CODE = 'EMP']/STATE_CODE_CODE",
+					"default": "KS"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "7225",
+					"description": "the class code for this risk unit. RiskUnit/CLASS_CODE_UNIT_CODE"
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string",
+					"description": "RiskUnit/SUB_CLASS_CODE_UNT_CODE"
+				},
+				"WrittenAmount": {
+					"title": "the total employee risk premmium amount",
+					"type": "string",
+					"description": "the total employee risk written premium amount. RiskUnit/PREM_TOTAL_M"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "1",
+					"description": "territory code for risk unit. RiskUnit/TERRITORY_ID_CODE"
+				},
+				"NumberOfEmployees": {
+					"title": "total number of employees",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "total number of employees. RiskUnit/CustomDetailsInState/NUM_EMP2"
+				},
+				"AccessToMoneyEmployees": {
+					"title": "Enter the Number of ERISA/Access to Money Employees",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "number of erisa/access to money employees. RiskUnit/CustomDetailsInState/NUM_CLS1_EMP"
+				},
+				"NumberOfWatchPersons": {
+					"title": "Enter the Number of watch persons",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "number of watch persons. RiskUnit/CustomDetailsInState/NUM_WTCH_PERS"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"PremisesRiskUnit": {
+			"title": "the Crime Employee Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"ClassCode",
+				"TerritoryCode",
+				"StateProvinceCode",
+				"NumberOfEmployees",
+				"AccessToMoneyEmployees",
+				"Coverage"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk.",
+					"default": "KS"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "7225",
+					"description": "the class code for this risk unit. the class code for this vehicle Non-Fleet 7391, Truck Tractor Trlr 01139."
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "1",
+					"description": "territory code for risk unit"
+				},
+				"WrittenAmount": {
+					"title": "the total premises premmium amount",
+					"type": "string",
+					"description": "the total premises written premium amount"
+				},
+				"NumberOfEmployees": {
+					"title": "total number of employees",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "total number of employees"
+				},
+				"AccessToMoneyEmployees": {
+					"title": "Enter the Number of ERISA/Access to Money Employees",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "number of erisa/access to money employees"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"AccountsReceivableRiskUnit": {
+			"title": "the Inland Marine Accounts Receibable Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"ClassCode",
+				"TerritoryCode",
+				"StateProvinceCode",
+				"BuildingRef",
+				"LocationRef",
+				"Coverage"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk.",
+					"default": "KS"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "7225",
+					"description": "the class code for this risk unit."
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string"
+				},
+				"WrittenAmount": {
+					"title": "the total AR risk premmium amount",
+					"type": "string",
+					"description": "the AR risk written premium amount.  RiskUnit/PREM_TOT_M"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "1",
+					"description": "territory code for risk unit. RiskUnit/TERRITORY_ID_CODE"
+				},
+				"BuildingRef": {
+					"title": "the building ref number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "SharedBuilding[Identifier = $bldgId or Identifier = $bldg1Id]/ATTACH_NBR_I"
+				},
+				"LocationRef": {
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "SharedLocation[Identifier = $locId or Identifier = $loc1Id ]/ATTACH_NBR_I"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"ValuablePapersAndRecordsRiskUnit": {
+			"title": "the Inland Marine Valuable Papers and Records Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"ClassCode",
+				"TerritoryCode",
+				"StateProvinceCode",
+				"BuildingRef",
+				"LocationRef",
+				"Coverage"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk.",
+					"default": "KS"
+				},
+				"ClassCode": {
+					"title": "the class code",
+					"type": "string",
+					"default": "7225",
+					"description": "the class code for this risk unit. RiskUnit/CLASS_CODE_UNIT_CODE"
+				},
+				"SubClassCode": {
+					"title": "the sub class code",
+					"type": "string",
+					"description": "RiskUnit/SUB_CLASS_CODE_UNIT_CODE"
+				},
+				"WrittenAmount": {
+					"title": "the total AR risk premmium amount",
+					"type": "string",
+					"description": "the AR risk written premium amount"
+				},
+				"TerritoryCode": {
+					"title": "the territory code",
+					"type": "string",
+					"default": "1",
+					"description": "territory code for risk unit. RiskUnit/TERRITORY_ID_CODE"
+				},
+				"BuildingRef": {
+					"title": "the building ref number",
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "SharedBuilding[Identifier = $bldgId or Identifier = $bldg1Id]/ATTACH_NBR_I"
+				},
+				"LocationRef": {
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "SharedLocation[Identifier = $locId or Identifier = $loc1Id ]/ATTACH_NBR_I"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"GeneralLiabilityRiskUnit": {
+			"title": "the GeneralLiability Umbrella/Excess Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"StateProvinceCode"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. RiskUnit/STATE_CODE_CODE"
+				},
+				"Company": {
+					"title": "the",
+					"type": "string",
+					"description": "the company for this risk unit.  RiskUnit/UNIT_DESC"
+				},
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "the policy number for this risk unit.  RiskUnit/IDENTIFICATION_TXT"
+				},
+				"TermEffectiveDate": {
+					"title": "the term effective date for this risk unit",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_1_D"
+				},
+				"TermExpirationDate": {
+					"title": "the expiration date",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_2_D"
+				},
+				"WrittenAmount": {
+					"title": "the total risk premmium amount",
+					"type": "string",
+					"description": "the risk written premium amount. RiskUnit/PREM_TOT_M"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"AutomobileLiabilityRiskUnit": {
+			"title": "the AutomobileLiability Umbrella/Excess Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.",
+			"required": [
+				"StateProvinceCode"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. RiskUnit/STATE_CODE_CODE",
+					"default": "KS"
+				},
+				"Company": {
+					"title": "the",
+					"type": "string",
+					"description": "the company for this risk unit.  RiskUnit/UNIT_DESC"
+				},
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "the policy number for this risk unit.  RiskUnit/IDENTIFICATION_TXT"
+				},
+				"TermEffectiveDate": {
+					"title": "the term effective date for this risk unit",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_1_D"
+				},
+				"TermExpirationDate": {
+					"title": "the expiration date",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_2_D"
+				},
+				"WrittenAmount": {
+					"title": "the total risk premmium amount",
+					"type": "string",
+					"description": "the risk written premium amount. RiskUnit/PREM_TOT_M"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"EmployersLiabilityRiskUnit": {
+			"title": "the EmployersLiability Umbrella/Excess Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.  This would be for a separate Work Comp policy.",
+			"required": [
+				"StateProvinceCode",
+				"PolicyNumber",
+				"TermEffectiveDate",
+				"TermExpirationDate",
+				"Company"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. RiskUnit/STATE_CODE_CODE"
+				},
+				"Company": {
+					"title": "the company for this risk unit",
+					"type": "string",
+					"description": "the company for this risk unit.  RiskUnit/UNIT_DESC"
+				},
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "the policy number for this risk unit.  RiskUnit/IDENTIFICATION_TXT"
+				},
+				"TermEffectiveDate": {
+					"title": "the term effective date for this risk unit",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_1_D"
+				},
+				"TermExpirationDate": {
+					"title": "the expiration date",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_2_D"
+				},
+				"WrittenAmount": {
+					"title": "the total risk premmium amount",
+					"type": "string",
+					"description": "the risk written premium amount. RiskUnit/PREM_TOT_M"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"OtherRiskUnit": {
+			"title": "the Other Umbrella/Excess Risk Unit",
+			"type": "object",
+			"description": "Risk Unit Information used for insurance policy coverage defintion.  This would be for an HNOA policy.",
+			"required": [
+				"StateProvinceCode",
+				"PolicyNumber",
+				"TermEffectiveDate",
+				"TermExpirationDate",
+				"Company"
+			],
+			"properties": {
+				"StateProvinceCode": {
+					"title": "the state code",
+					"type": "string",
+					"description": "the state associated with this risk. RiskUnit/STATE_CODE_CODE"
+				},
+				"Company": {
+					"title": "the company for this risk unit",
+					"type": "string",
+					"description": "the company for this risk unit.  RiskUnit/UNIT_DESC"
+				},
+				"PolicyNumber": {
+					"title": "the policy number",
+					"type": "string",
+					"description": "the policy number for this risk unit.  RiskUnit/IDENTIFICATION_TXT"
+				},
+				"TermEffectiveDate": {
+					"title": "the term effective date for this risk unit",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_1_D"
+				},
+				"TermExpirationDate": {
+					"title": "the expiration date",
+					"type": "string",
+					"format": "date-time",
+					"description": "RiskUnit/LOB_DATE_2_D"
+				},
+				"Description": {
+					"title": "Enter the Description",
+					"type": "string",
+					"description": "other risk unit description (e.g. Delivery Auto). RiskUnit/DESC"
+				},
+				"UnderlyingExistsCode": {
+					"title": "Selectd if Underlying Exists",
+					"type": "string",
+					"description": "Indicator if underlying exists RiskUnit/UNDL_IND_Code.",
+					"enum": [
+						"Y",
+						"N"
+					]
+				},
+				"WrittenAmount": {
+					"title": "the total risk premmium amount",
+					"type": "string",
+					"description": "the risk written premium amount. RiskUnit/PREM_TOT_M"
+				},
+				"Coverage": {
+					"title": "the coverages",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Coverage"
+					}
+				}
+			}
+		},
+		"AdditionalInterestAssociation": {
+			"title": "additional interest assocation",
+			"type": "object",
+			"required": [
+				"InterestTypeCode",
+				"AdditionalInterestRef"
+			],
+			"properties": {
+				"InterestTypeCode": {
+					"type": "string",
+					"enum": [
+						"LP",
+						"MT",
+						"BLP",
+						"LL",
+						"CS"
+					],
+					"description": "the interest type code"
+				},
+				"LoanNumber": {
+					"type": "string"
+				},
+				"AdditionalInterestRef": {
+					"type": "integer",
+					"format": "int32",
+					"default": 1,
+					"description": "the attach number for the additional interest"
+				}
+			}
+		},
+		"AdditionalInterest": {
+			"title": "additional interest",
+			"type": "object",
+			"required": [
+				"AdditionalInterestNumber"
+			],
+			"properties": {
+				"AdditionalInterestNumber": {
+					"type": "integer",
+					"format": "int32",
+					"default": 1
+				},
+				"Name": {
+					"title": "the clients names",
+					"type": "array",
+					"description": "Client names",
+					"items": {
+						"$ref": "#/definitions/Name"
+					}
+				},
+				"Address": {
+					"title": "Additional Interest Address",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Address"
+					}
+				}
+			}
+		},
+		"CreditOrSurcharge": {
+			"title": "credit or surcharge",
+			"type": "object",
+			"required": [
+				"CreditOrSurchargeCode",
+				"ModificationFactor"
+			],
+			"properties": {
+				"CreditOrSurchargeCode": {
+					"type": "string",
+					"enum": [
+						"IRPM",
+						"IRPMLiab",
+						"IRPMPhd",
+						"IRPMNf",
+						"LPDP",
+						"LPDPLiab",
+						"LPDPPhd",
+						"LPDPNf",
+						"SSR",
+						"PackageModState",
+						"ScheduleMod",
+						"ScheduleModLiab",
+						"ScheduleModPhd",
+						"ScheduleModNf",
+						"ExperienceMod",
+						"ExperienceModLiab",
+						"ExperienceModPhd",
+						"ExperienceModNf"
+					],
+					"description": "the credit or surcharge code.  IRPM Individual Risk Premium Modificaiton, LPDP Large Policy Discount, SSR Special Rating Rule, Experience Modifiation, Schedule Modification"
+				},
+				"ModificationFactor": {
+					"type": "number",
+					"format": "float",
+					"description": "the credit or surcharge number amount"
+				}
+			}
+		},
+		"Form": {
+			"title": "Form",
+			"type": "object",
+			"required": [
+				"FormNumber",
+				"EditionDate"
+			],
+			"properties": {
+				"FormNumber": {
+					"type": "string",
+					"description": "the form number"
+				},
+				"EditionDate": {
+					"type": "string",
+					"description": "the form edition date"
+				},
+				"Version": {
+					"type": "string",
+					"description": "the form version, this defaults to 1"
+				},
+				"Sequence": {
+					"type": "string",
+					"description": "the form sequence, this defaults to 1"
+				},
+				"FormVariableTextData": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/FormVariableTextData"
+					},
+					"description": "the variable form text data"
+				},
+				"State": {
+					"type": "string",
+					"description": "the state this form is applicable in"
+				}
+			}
+		},
+		"FormVariableTextData": {
+			"title": "Form Variable Text Data",
+			"type": "object",
+			"required": [
+				"VariableText",
+				"VariableTextRowNumber",
+				"VariableTextSequenceNumber",
+				"VariableTextLabel"
+			],
+			"properties": {
+				"VariableTextRowNumber": {
+					"type": "string",
+					"description": "the form variable text row number"
+				},
+				"VariableTextSequenceNumber": {
+					"type": "string",
+					"description": "the form variable text sequence number"
+				},
+				"VariableTextLabel": {
+					"type": "string",
+					"description": "the form variable text label"
+				},
+				"VariableText": {
+					"type": "string",
+					"description": "the form variable text"
+				}
+			}
+		},
+		"QuoteCondition": {
+			"title": "The Quote Condition",
+			"type": "object",
+			"properties": {
+				"SubjectivityTypeCode": {
+					"type": "string",
+					"description": "subjectivity type code DRV_LST Drivers list, NCOMPL_END Drivers Eligibility non-compliance ded end,  DED_ENDR Drivers  Policy Deductible Endorsement (HNOA), PMT_AUTH Completed Payment Authorization from",
+					"enum": [
+						"DRV_LST",
+						"DED_ENDR",
+						"PMT_AUTH",
+						"NCOMPL_END"
+					]
+				},
+				"QuoteConditionText": {
+					"type": "string",
+					"description": "quote condition description of the condition",
+					"title": "Enter a description of the condition"
+				},
+				"QuoteConditionNumber": {
+					"type": "integer",
+					"description": "quote condition number",
+					"title": "Enter the condition number"
+				}
+			}
+		},
+		"Incident": {
+			"title": "Incident",
+			"type": "object",
+			"properties": {
+				"NCExcludedCauseOfLossCode": {
+					"type": "string"
+				}
+			}
+		},
+		"ActivityNote": {
+			"title": "Policy Activity and Notes",
+			"type": "object",
+			"properties": {
+				"ActivityNoteTypeCode": {
+					"type": "string",
+					"description": "activity type code"
+				},
+				"EffectiveDate": {
+					"type": "string",
+					"description": "the activity transaction effective date"
+				},
+				"ProcessDate": {
+					"type": "string",
+					"description": "the activity process date"
+				},
+				"Description": {
+					"type": "string",
+					"description": "activity description text"
+				},
+				"Product": {
+					"type": "string",
+					"description": "the product related to this activity"
+				},
+				"StatusCode": {
+					"type": "string",
+					"description": "activity status code"
+				},
+				"User": {
+					"type": "string",
+					"description": "user name associated to this activity"
+				}
+			}
+		}
+	},
+	"securityDefinitions": {
+		"default": {
+			"type": "oauth2",
+			"authorizationUrl": "https://apidev.wrberkley.com/authorize",
+			"flow": "implicit",
+			"scopes": {}
+		}
+	}
+}

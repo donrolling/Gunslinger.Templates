@@ -1,0 +1,38 @@
+{
+    "OutputDirectory": "C:\\Projects\\idi.utilities\\Gunslinger.Templates\\Output",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [
+    ],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [
+    ],
+    "DataProviders": [
+        {
+            "Name": "ReflectionDataProvider",
+            "TypeName": "ReflectionDataProvider",
+            "Namespaces": [                
+                "Idi.Marketplace.Models.Rating",
+                "Idi.Marketplace.Models.Policy"
+            ],
+            "DataSource": "C:\\Projects\\idi.utilities\\Gunslinger.Templates\\Tests\\Resources\\Idi.Marketplace.Models.dll"
+        }
+    ],
+    "Templates": [
+        {
+            "Type": "Model",
+            "Name": "ReflectionModels",
+            "Namespace": "Reflection",
+            "IsStub": false,
+            "InputRelativePath": "ReflectionModel.txt",
+            "OutputRelativePath": "{entityName}.ts",
+            "Language": "javascript",
+
+            "DataProviderName": "ReflectionDataProvider",
+            "Imports": [
+            ]
+        }
+    ]
+}

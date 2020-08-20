@@ -1,0 +1,46 @@
+{
+    "OutputDirectory": "C:\\Projects\\idi.utilities\\Gunslinger.Templates\\Output",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [],
+    "DataProviders": [
+        {
+            "Name": "WebAPIDataProvider",
+            "TypeName": "WebAPIDataProvider",
+            "Namespaces": [
+                "Idi.Marketplace.WebApi.Api"
+            ],
+            "DataSource": "C:\\Projects\\idi.market\\Idi.Marketplace.WebApi\\bin\\Idi.Marketplace.WebApi.dll"
+        }
+    ],
+    "Templates": [
+        {
+            "ExcludeTheseTypes": [
+                "HttpActionContext",
+                "HttpConfiguration",
+                "HttpControllerContext",
+                "HttpRequestContext",
+                "HttpRequestMessage",
+                "HttpResponseMessage",
+                "IPrincipal",
+                "ModelStateDictionary",
+                "UrlHelper",
+                "TEntity"
+            ],
+            "Type": "Model",
+            "Name": "WebAPIModels",
+            "Namespace": "Reflection",
+            "IsStub": false,
+            "InputRelativePath": "JavascriptAPIService.txt",
+            "OutputRelativePath": "API\\Services\\{entityName}.ts",
+            "Language": "javascript",
+            "DataProviderName": "WebAPIDataProvider",
+            "Imports": [
+            ]
+        }
+    ]
+}

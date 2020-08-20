@@ -1,0 +1,3 @@
+{
+  "ConnectionString": "Data Source=localhost;Initial Catalog=idi_sample;Integrated Security=SSPI;"
+}
