@@ -6,6 +6,6 @@ namespace Gunslinger.Models
 {
     public class Model : ModelBase, IProviderModel
     {
-        public List<Property> Properties { get; set; }
+        public List<Property> Properties { get; set; } = new List<Property>();
     }
 }

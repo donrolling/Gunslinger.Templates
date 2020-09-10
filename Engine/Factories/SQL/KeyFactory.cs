@@ -18,8 +18,8 @@ namespace Gunslinger.Factories.SQL
 
         public static SQLKey Create(Name name, SqlDataType sqlDataType)
         {
-            var dataType = DataTypeConversion.ConvertTo_CSDataType(sqlDataType, false);
-            var dbType = DataTypeConversion.ConvertTo_CSDbType(sqlDataType);
+            var dataType = SQLDataTypeConversion.ConvertTo_CSDataType(sqlDataType, false);
+            var dbType = SQLDataTypeConversion.ConvertTo_CSDbType(sqlDataType);
             return new SQLKey
             {
                 Name = name,

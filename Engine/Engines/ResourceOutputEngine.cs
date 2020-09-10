@@ -3,7 +3,6 @@ using Gunslinger.Models;
 using Gunslinger.Responses;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using System.Linq;
 
 namespace Gunslinger.Engines
 {
@@ -78,7 +77,6 @@ namespace Gunslinger.Engines
 
         private static void copyAllDirectories(string sourcePath, string destinationPath)
         {
-
             //create all of the directories
             var sourcePaths = Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories);
             foreach (var newSourcePath in sourcePaths)

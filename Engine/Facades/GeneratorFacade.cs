@@ -1,24 +1,27 @@
 ﻿using Common.BaseClasses;
 using Gunslinger.Enum;
 using Gunslinger.Interfaces;
+using Gunslinger.Models;
 using Gunslinger.Responses;
 using Microsoft.Extensions.Logging;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gunslinger.Facades
 {
     public class GeneratorFacade : LoggingWorker, IGeneratorFacade
     {
+        public GenerationContext Context { get; private set; }
+
         private readonly IContextFactory _contextFactory;
         private readonly IDataProviderFactory _dataProviderFactory;
         private readonly IModelGeneratorFacade _modelGeneratorFacade;
         private readonly IResourceOutputEngine _resourceOutputEngine;
 
         public GeneratorFacade(
-            IContextFactory contextFactory, 
+            IContextFactory contextFactory,
             IDataProviderFactory dataProviderFactory,
-            IModelGeneratorFacade modelGeneratorFacade, 
+            IModelGeneratorFacade modelGeneratorFacade,
             IResourceOutputEngine resourceOutputEngine,
             ILoggerFactory loggerFactory
         ) : base(loggerFactory)
@@ -27,37 +30,41 @@ namespace Gunslinger.Facades
             _dataProviderFactory = dataProviderFactory;
             _modelGeneratorFacade = modelGeneratorFacade;
             _resourceOutputEngine = resourceOutputEngine;
+            Context = _contextFactory.Create();
         }
 
         public OperationResult Generate()
         {
-            var context = _contextFactory.Create();
+            var errors = new List<OperationResult>();
 
             // initialize all data providers
-            var dataProviderNames = context.Templates.Select(a => a.DataProviderName).Distinct();
+            var dataProviderNames = Context.Templates.Select(a => a.DataProviderName).Distinct();
             foreach (var dataProviderName in dataProviderNames)
             {
-                var dataProviderDefinition = context.DataProviders.First(a => a.Name == dataProviderName);
+                var dataProviderDefinition = Context.DataProviders.First(a => a.Name == dataProviderName);
                 _dataProviderFactory.Create(dataProviderDefinition);
             }
 
-            foreach (var template in context.Templates)
+            foreach (var template in Context.Templates)
             {
                 switch (template.Type)
                 {
                     case TemplateType.Model:
-                        var generateResult = _modelGeneratorFacade.GenerateMany(context, template);
+                        var generateResult = _modelGeneratorFacade.GenerateMany(Context, template);
                         if (generateResult.Failure)
                         {
+                            errors.Add(generateResult);
                             this.Logger.LogError(generateResult.Message);
                         }
 
                         break;
+
                     case TemplateType.Setup:
                     default:
-                        var generateOneResult = _modelGeneratorFacade.GenerateOne(context, template);
+                        var generateOneResult = _modelGeneratorFacade.GenerateOne(Context, template);
                         if (generateOneResult.Failure)
                         {
+                            errors.Add(generateOneResult);
                             this.Logger.LogError(generateOneResult.Message);
                         }
 
@@ -66,13 +73,18 @@ namespace Gunslinger.Facades
             }
 
             // copy resource files
-            var resourseWriteResult = _resourceOutputEngine.Write(context);
+            var resourseWriteResult = _resourceOutputEngine.Write(Context);
             if (resourseWriteResult.Failure)
             {
                 return resourseWriteResult;
             }
 
             // done
+            if (errors.Any())
+            {
+                var message = errors.Select(a => a.Message).Aggregate("Generation was not completely successful.\r\n\t", (accumulator, next) => $"{ accumulator}\r\n\t{ next }");
+                return OperationResult.Fail(message);
+            }
             return OperationResult.Ok();
         }
     }

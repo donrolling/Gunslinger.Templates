@@ -1,10 +1,11 @@
-﻿using Gunslinger.Models;
+﻿using Gunslinger.Models.Settings;
 
 namespace Gunslinger.Interfaces
 {
     public interface IDataProviderFactory
     {
-        IDataProvider Create(DataProvider dataProvider);
+        IDataProvider Create(dynamic dataProviderSettings);
+
         IDataProvider Get(string name);
     }
 }

@@ -28,7 +28,7 @@ namespace Gunslinger.Factories.SQL
             "varbinarymax"
         };
 
-        public static SQLColumn Create(Name modelName, Column column, Enum.Language language)
+        public static SQLColumn Create(Name modelName, Column column, Enum.TemplateLanguage language)
         {
             var property = new SQLColumn
             {
@@ -38,7 +38,7 @@ namespace Gunslinger.Factories.SQL
                 Nullable = column.Nullable,
                 PrimaryKey = column.InPrimaryKey,
                 SqlDataTypeEnum = column.DataType.SqlDataType,
-                SqlDataType = getDataType(Enum.Language.sql, column.DataType.SqlDataType, column.DataType.MaximumLength),
+                SqlDataType = getDataType(Enum.TemplateLanguage.sql, column.DataType.SqlDataType, column.DataType.MaximumLength),
                 Type = getDataType(language, column.DataType.SqlDataType, 0),
                 IsInPrimaryKey = column.InPrimaryKey,
                 IsForeignKey = column.IsForeignKey,
@@ -47,14 +47,14 @@ namespace Gunslinger.Factories.SQL
             return property;
         }
 
-        private static string getDataType(Enum.Language language, SqlDataType sqlDataType, int maximumLength)
+        private static string getDataType(Enum.TemplateLanguage language, SqlDataType sqlDataType, int maximumLength)
         {
             switch (language)
             {
-                case Enum.Language.csharp:
-                    return DataTypeConversion.ConvertTo_CSDataType(sqlDataType, false);
+                case Enum.TemplateLanguage.csharp:
+                    return SQLDataTypeConversion.ConvertTo_CSDataType(sqlDataType, false);
 
-                case Enum.Language.sql:
+                case Enum.TemplateLanguage.sql:
                     var baseType = sqlDataType.ToString().ToLower();
                     if (maxTypes.Contains(baseType))
                     {

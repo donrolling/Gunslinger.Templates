@@ -2,6 +2,7 @@
 using Gunslinger.Models.SQL;
 using Microsoft.SqlServer.Management.Smo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gunslinger.Factories.SQL
 {
@@ -9,11 +10,13 @@ namespace Gunslinger.Factories.SQL
     {
         private static List<string> _excludedTypes = new List<string> { "dbo.sysdiagrams" };
 
-        public static IEnumerable<Table> Create(SQLServerInfo sqlServerInfo, GenerationSettings settings, List<string> excludedTypes)
+        public static IEnumerable<Table> Create(SQLServerInfo sqlServerInfo, GenerationSettings settings, List<string> includeTheseEntitiesOnly, List<string> excludeTheseEntities)
         {
             //can't use linq expression here because TableCollection is gross
             var tables = new List<Table>();
             sqlServerInfo.Database.Refresh();
+            var whiteList = includeTheseEntitiesOnly.Any();
+            var blackList = excludeTheseEntities.Any();
             foreach (Table table in sqlServerInfo.Database.Tables)
             {
                 var uniqueName = UniqueNameFactory.Create(table.Schema, table.Name);
@@ -21,9 +24,19 @@ namespace Gunslinger.Factories.SQL
                 {
                     continue;
                 }
-                if (excludedTypes.Contains(uniqueName))
+                if (whiteList)
                 {
-                    continue;
+                    if (!includeTheseEntitiesOnly.Contains(uniqueName))
+                    {
+                        continue;
+                    }
+                }
+                if (blackList)
+                {
+                    if (excludeTheseEntities.Contains(uniqueName))
+                    {
+                        continue;
+                    }
                 }
                 tables.Add(table);
             }

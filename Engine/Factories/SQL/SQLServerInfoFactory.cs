@@ -1,6 +1,7 @@
 ﻿using Common.BaseClasses;
 using Gunslinger.Interfaces;
 using Gunslinger.Models;
+using Gunslinger.Models.Settings;
 using Gunslinger.Models.SQL;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Management.Smo;
@@ -22,7 +23,7 @@ namespace Gunslinger.Factories.SQL
         {
         }
 
-        public SQLServerInfo Create(DataProvider dataProvider)
+        public SQLServerInfo Create(DataProviderSettings dataProvider)
         {
             //don't construct this stuff twice
             if (_sqlServerInfo.ContainsKey(dataProvider.Name))

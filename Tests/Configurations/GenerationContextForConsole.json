@@ -13,17 +13,17 @@
       "TypeName": "SQLModelDataProvider",
       "UseLocalDataSource": false,
       "LocalDataSource": "",
-      "DataSource": "Data Source=localhost;Initial Catalog=idi_sample;Integrated Security=SSPI;"
+      "DataSource": "Data Source=localhost;Initial Catalog=sample;Integrated Security=SSPI;"
     }
   ],
   "Templates": [
     {
       "Type": "Model",
       "Name": "EntityModels",
-      "Namespace": "idi.sample.data.Entities",
+      "Namespace": "sample.data.Entities",
       "IsStub": false,
       "InputRelativePath": "EntityModel.txt",
-      "OutputRelativePath": "idi.sample.data\\Entities\\{entityName}.cs",
+      "OutputRelativePath": "sample.data\\Entities\\{entityName}.cs",
       "Language": "csharp",
       
       "DataProviderName": "SQLModelsDataProvider",
@@ -36,26 +36,26 @@
     {
       "Type": "Model",
       "Name": "Gateway",
-      "Namespace": "idi.sample.Data.Gateway",
+      "Namespace": "sample.Data.Gateway",
       "IsStub": false,
       "InputRelativePath": "Gateway.txt",
-      "OutputRelativePath": "idi.sample.data\\Gateway\\Dapper\\{entityName}DapperGateway.cs",
+      "OutputRelativePath": "sample.data\\Gateway\\Dapper\\{entityName}DapperGateway.cs",
       "Language": "csharp",
       
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
-        "idi.sample.Data.Gateway.Base",
-        "idi.sample.Data.Interfaces",
+        "sample.Data.Gateway.Base",
+        "sample.Data.Interfaces",
         "Microsoft.Extensions.Logging"
       ]
     },
     {
       "Type": "Model",
       "Name": "BaseGateway",
-      "Namespace": "idi.sample.Data.Gateway.Base",
+      "Namespace": "sample.Data.Gateway.Base",
       "IsStub": false,
       "InputRelativePath": "BaseGateway.txt",
-      "OutputRelativePath": "idi.sample.data\\Gateway\\Dapper\\Base\\{entityName}DapperGatewayBase.cs",
+      "OutputRelativePath": "sample.data\\Gateway\\Dapper\\Base\\{entityName}DapperGatewayBase.cs",
       "Language": "csharp",
       
       "DataProviderName": "SQLModelsDataProvider",
@@ -64,7 +64,7 @@
         "Dapper.SQLGateway",
         "Dapper.SQLGateway.Interfaces",
         "Dapper.SQLGateway.Models",
-        "idi.sample.data.Entities",
+        "sample.data.Entities",
         "Microsoft.Extensions.Logging",
         "System.Threading.Tasks",
         "System.Data"
@@ -73,34 +73,34 @@
     {
       "Type": "Model",
       "Name": "GatewayInterface",
-      "Namespace": "idi.sample.Data.Interfaces",
+      "Namespace": "sample.Data.Interfaces",
       "IsStub": false,
       "InputRelativePath": "GatewayInterface.txt",
-      "OutputRelativePath": "idi.sample.data\\Gateway\\Interfaces\\I{entityName}Gateway.cs",
+      "OutputRelativePath": "sample.data\\Gateway\\Interfaces\\I{entityName}Gateway.cs",
       "Language": "csharp",
       
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "Dapper.SQLGateway.Interfaces",
-        "idi.sample.data.Entities"
+        "sample.data.Entities"
       ]
     },
     {
       "Type": "Model",
       "Name": "GatewayTest",
-      "Namespace": "idi.sample.Test.DataAccess",
+      "Namespace": "sample.Test.DataAccess",
       "IsStub": false,
       "InputRelativePath": "DataAccessTest.txt",
-      "OutputRelativePath": "idi.sample.test\\DataAccess\\{entityName}_CRUD_Test.cs",
+      "OutputRelativePath": "sample.test\\DataAccess\\{entityName}_CRUD_Test.cs",
       "Language": "csharp",
       
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "AutoFixture",
-        "idi.sample.data.Entities",
-        "idi.sample.Data.Interfaces",
-        "idi.sample.test.Base",
-        "idi.sample.test.Utility",
+        "sample.data.Entities",
+        "sample.Data.Interfaces",
+        "sample.test.Base",
+        "sample.test.Utility",
         "Microsoft.Extensions.DependencyInjection",
         "Microsoft.VisualStudio.TestTools.UnitTesting",
         "System.Collections.Generic",
@@ -113,7 +113,7 @@
       "Namespace": "",
       "IsStub": false,
       "InputRelativePath": "InsertProcedure.txt",
-      "OutputRelativePath": "idi.sample.database\\{schema}\\Stored Procedures\\{entityName}_Insert.sql",
+      "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Insert.sql",
       "Language": "sql",
       
       "DataProviderName": "SQLModelsDataProvider",
@@ -125,7 +125,7 @@
       "Namespace": "",
       "IsStub": false,
       "InputRelativePath": "UpdateProcedure.txt",
-      "OutputRelativePath": "idi.sample.database\\{schema}\\Stored Procedures\\{entityName}_Update.sql",
+      "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Update.sql",
       "Language": "sql",
       
       "DataProviderName": "SQLModelsDataProvider",
@@ -137,7 +137,7 @@
       "Namespace": "",
       "IsStub": false,
       "InputRelativePath": "DeleteProcedure.txt",
-      "OutputRelativePath": "idi.sample.database\\{schema}\\Stored Procedures\\{entityName}_Delete.sql",
+      "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Delete.sql",
       "Language": "sql",
       
       "DataProviderName": "SQLModelsDataProvider",
@@ -146,16 +146,16 @@
     {
       "Type": "Setup",
       "Name": "DataAccessTestInjectionWireUp",
-      "Namespace": "idi.sample.test.Injection",
+      "Namespace": "sample.test.Injection",
       "IsStub": false,
       "InputRelativePath": "DataAccessTestInjectionWireUp.txt",
-      "OutputRelativePath": "idi.sample.test\\Injection\\DataAccess.cs",
+      "OutputRelativePath": "sample.test\\Injection\\DataAccess.cs",
       "Language": "sql",
       
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
-        "idi.sample.Data.Gateway",
-        "idi.sample.Data.Interfaces",
+        "sample.Data.Gateway",
+        "sample.Data.Interfaces",
         "Microsoft.Extensions.DependencyInjection",
         "Microsoft.Extensions.Logging"
       ]

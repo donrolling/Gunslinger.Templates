@@ -1,6 +1,6 @@
-﻿namespace Gunslinger.Models
+﻿namespace Gunslinger.Models.Reflection
 {
-    public class Property
+    public class ReflectionProperty
     {
         public string Description { get; set; }
         public string Type { get; set; }

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Gunslinger.Models;
 using Gunslinger.Responses;
 
 namespace Gunslinger.Interfaces
 {
     public interface IGeneratorFacade
     {
+        GenerationContext Context { get; }
+
         OperationResult Generate();
     }
 }

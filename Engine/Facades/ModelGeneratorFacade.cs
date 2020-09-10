@@ -43,21 +43,43 @@ namespace Gunslinger.Facades
 
         public OperationResult GenerateMany(GenerationSettings settings, Template template)
         {
-            var items = getDataItems(settings, template);
-            var destinationPath = prepareOutputDirectory(settings, template);
+            //if (template.IsStub && !settings.ProcessTemplateStubs) {
+            //    return OperationResult.Ok();
+            //}
 
+            var getResult = getDataItems(settings, template);
+            if (getResult.Failure)
+            {
+                return getResult;
+            }
+            var destinationPath = prepareOutputDirectory(settings, template);
+            var items = getResult.Result;
             foreach (var (entityName, value) in items)
             {
-                if (settings.ExcludeTheseEntities.Contains(value.Name.Value))
+                if (template.ExcludeTheseTypes.Contains(value.Name.Value))
                 {
+                    // do everything but output this stuff
                     continue;
                 }
-
                 var output = _renderEngine.Render(template, value);
-                var result = _templateOutputEngine.Write(destinationPath, value.Name.Value, value.Schema, output);
+                var result = _templateOutputEngine.Write(destinationPath, value.Name.Value, value.Schema, output, template.IsStub, settings.ProcessTemplateStubs);
                 if (result.Failure)
                 {
                     return result;
+                }
+            }
+
+            if (template.FileRename != null && template.FileRename.Any())
+            {
+                // clean name template off of the destination path for renaming
+                var cleanDestinationPath = destinationPath.Substring(0, destinationPath.LastIndexOf('\\') + 1);
+                foreach (var fileRename in template.FileRename)
+                {
+                    var renameResult = _templateOutputEngine.Rename(cleanDestinationPath, fileRename.Source, fileRename.Destination, fileRename.ClassRenameValue, fileRename.ClassReplaceValue);
+                    if (renameResult.Failure)
+                    {
+                        return renameResult;
+                    }
                 }
             }
 
@@ -66,9 +88,13 @@ namespace Gunslinger.Facades
 
         public OperationResult GenerateOne(GenerationSettings settings, Template template)
         {
-            var items = getDataItems(settings, template);
+            var getResult = getDataItems(settings, template);
+            if (getResult.Failure)
+            {
+                return getResult;
+            }
             var destinationPath = prepareOutputDirectory(settings, template);
-
+            var items = getResult.Result;
             var groupProviderModel = new GroupModel
             {
                 Models = items.Select(a => a.Value),
@@ -76,7 +102,7 @@ namespace Gunslinger.Facades
                 Imports = template.Imports
             };
             var output = _renderEngine.Render(template, groupProviderModel);
-            var result = _templateOutputEngine.Write(destinationPath, output);
+            var result = _templateOutputEngine.Write(destinationPath, output, template.IsStub, settings.ProcessTemplateStubs);
             if (result.Failure)
             {
                 return result;
@@ -88,17 +114,37 @@ namespace Gunslinger.Facades
         private string prepareOutputDirectory(GenerationSettings settings, Template template)
         {
             // cleanup the output directory
-            var destinationPath = $"{ settings.OutputDirectory }\\{ template.OutputRelativePath }";
+            var destinationPath = Path.Join(settings.OutputDirectory, template.OutputRelativePath);
+            if (template.IsStub && !settings.ProcessTemplateStubs)
+            {
+                // don't clean the directory if we're not going to ProcessTemplateStubs
+                // this way, we can be sneaky and still generate stubs that don't already exist
+                return destinationPath;
+            }
+            if (!template.DeleteAllItemsInOutputDirectory)
+            {
+                // don't clean the directory if DeleteAllItemsInOutputDirectory is set to false
+                // this way a directory may contain elements that shouldn't be deleted.
+                // This is not preferred, but it gives us flexibility.
+                return destinationPath;
+            }
             var destinationDirectory = Path.GetDirectoryName(destinationPath);
-            var cleanupResult = _templateOutputEngine.CleanupOutputDirectory(destinationDirectory);
+            if (template.DeleteAllItemsInOutputDirectory)
+            {
+                var cleanupResult = _templateOutputEngine.CleanupOutputDirectory(destinationDirectory);
+            }
             return destinationPath;
         }
 
-        private Dictionary<string, IProviderModel> getDataItems(GenerationSettings settings, Template template)
+        private OperationResult<Dictionary<string, IProviderModel>> getDataItems(GenerationSettings settings, Template template)
         {
             var dataProvider = _dataProviderFactory.Get(template.DataProviderName);
-            var items = dataProvider.Get(settings, template, settings.ExcludeTheseEntities);
-            return items;
+            var getResult = dataProvider.Get(settings, template, settings.IncludeTheseEntitiesOnly, settings.ExcludeTheseEntities);
+            if (getResult.Failure)
+            {
+                return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail(getResult.Message));
+            }
+            return OperationResult<Dictionary<string, IProviderModel>>.Ok(getResult.Result);
         }
     }
 }

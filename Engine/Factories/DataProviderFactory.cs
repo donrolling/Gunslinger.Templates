@@ -1,10 +1,14 @@
 ﻿using Common.BaseClasses;
 using Gunslinger.DataProviders;
 using Gunslinger.Interfaces;
-using Gunslinger.Models;
+using Gunslinger.Models.Settings;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Gunslinger.Factories
 {
@@ -12,8 +16,8 @@ namespace Gunslinger.Factories
     {
         private static readonly Dictionary<string, IDataProvider> _dataProviderDictionary;
 
-        public ISQLServerInfoFactory SqlServerInfoFactory { get; }
-        public ILoggerFactory LoggerFactory { get; }
+        private readonly ISQLServerInfoFactory _sqlServerInfoFactory;
+        private readonly ILoggerFactory _loggerFactory;
 
         static DataProviderFactory()
         {
@@ -22,33 +26,88 @@ namespace Gunslinger.Factories
 
         public DataProviderFactory(ISQLServerInfoFactory sqlServerInfoFactory, ILoggerFactory loggerFactory) : base(loggerFactory)
         {
-            SqlServerInfoFactory = sqlServerInfoFactory;
-            LoggerFactory = loggerFactory;
+            _sqlServerInfoFactory = sqlServerInfoFactory;
+            _loggerFactory = loggerFactory;
         }
 
-        public IDataProvider Create(DataProvider dataProvider)
+        public IDataProvider Create(dynamic dataProviderSettings)
         {
-            if (_dataProviderDictionary.ContainsKey(dataProvider.Name))
+            var allSettings = JsonConvert.SerializeObject(dataProviderSettings);
+            DataProviderSettings settings = JsonConvert.DeserializeObject<DataProviderSettings>(allSettings);
+            if (_dataProviderDictionary.ContainsKey(settings.Name))
             {
-                return _dataProviderDictionary[dataProvider.Name];
+                return _dataProviderDictionary[settings.Name];
             }
-
-            switch (dataProvider.TypeName)
+            if (settings.OpenDataSourceUrlInDefaultBrowser)
+            {
+                openDataSourceInBrowser(settings.DataSource);
+                // wait for the browser to load the file
+                Thread.Sleep(TimeSpan.FromSeconds(10));
+            }
+            switch (settings.TypeName)
             {
                 case "SwaggerDataProvider":
-                    var swaggerDataProvider = new SwaggerDataProvider(dataProvider, this.LoggerFactory);
-                    _dataProviderDictionary.Add(dataProvider.Name, swaggerDataProvider);
+                    var swaggerDataProviderSettings = JsonConvert.DeserializeObject<SwaggerDataProviderSettings>(allSettings);
+                    var swaggerDataProvider = new SwaggerDataProvider(swaggerDataProviderSettings, this._loggerFactory);
+                    _dataProviderDictionary.Add(settings.Name, swaggerDataProvider);
                     return swaggerDataProvider;
 
                 case "SQLModelDataProvider":
-                    var SQLModelDataProvider = new SQLModelDataProvider(SqlServerInfoFactory, dataProvider, this.LoggerFactory);
-                    _dataProviderDictionary.Add(dataProvider.Name, SQLModelDataProvider);
-                    return SQLModelDataProvider;
+                    var sqlModelDataProvider = new SQLModelDataProvider(_sqlServerInfoFactory, settings, this._loggerFactory);
+                    _dataProviderDictionary.Add(settings.Name, sqlModelDataProvider);
+                    return sqlModelDataProvider;
+
+                case "ReflectionDataProvider":
+                    var reflectionDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                    var reflectionDataProvider = new ReflectionDataProvider(reflectionDataProviderSettings, this._loggerFactory);
+                    _dataProviderDictionary.Add(settings.Name, reflectionDataProvider);
+                    return reflectionDataProvider;
+
+                case "ReflectionMethodInfoDataProvider":
+                    var reflectionMethodInfoDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                    var reflectionMethodInfoDataProvider = new MethodInfoDataProvider(reflectionMethodInfoDataProviderSettings, this._loggerFactory);
+                    _dataProviderDictionary.Add(settings.Name, reflectionMethodInfoDataProvider);
+                    return reflectionMethodInfoDataProvider;
+
+                case "WebAPIDataProvider":
+                    var webAPIDataProviderDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                    var webAPIDataProviderDataProvider = new WebAPIDataProvider(webAPIDataProviderDataProviderSettings, this._loggerFactory);
+                    _dataProviderDictionary.Add(settings.Name, webAPIDataProviderDataProvider);
+                    return webAPIDataProviderDataProvider;
 
                 default:
-                    var msg = $"Create() - Name not matched: { dataProvider.TypeName }";
+                    var msg = $"Create() - Name not matched: { settings.TypeName }";
                     this.Logger.LogError(msg);
                     throw new Exception(msg);
+            }
+        }
+
+        private void openDataSourceInBrowser(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 

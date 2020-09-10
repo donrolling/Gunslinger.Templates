@@ -3,7 +3,7 @@ using System.Data;
 
 namespace Gunslinger.Types
 {
-    public static class DataTypeConversion
+    public static class SQLDataTypeConversion
     {
         /// <summary>
         /// Conversion from SQLDataType to CSharp DataType.
@@ -52,11 +52,11 @@ namespace Gunslinger.Types
                 case SqlDataType.Decimal:
                 case SqlDataType.Money:
                 case SqlDataType.Numeric:
-                    csDataType = "Decimal";
+                    csDataType = "decimal";
                     break;
 
                 case SqlDataType.Float:
-                    csDataType = "Double";
+                    csDataType = "double";
                     break;
 
                 case SqlDataType.Time:

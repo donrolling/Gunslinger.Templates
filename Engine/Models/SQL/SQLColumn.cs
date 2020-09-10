@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Management.Smo;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gunslinger.Models.SQL
 {
