@@ -1,6 +1,6 @@
 {
   "GenerationContext": {
-    "OutputDirectory": "C:\\\\Projects\\Gunslinger\\SampleProject",
+    "OutputDirectory": "C:\\\\Projects\\idi.utilities\\Idi.Templating.Mustache\\SampleProject",
     "ProcessTemplateStubs": false,
     "TemplateDirectory": "Templates",
     "ExcludeTheseEntities": [ "Item" ],
@@ -10,7 +10,7 @@
     "Resources": [
       {
         "Source": "Resources\\Dapper",
-        "Destination": "Sample.data\\Dapper"
+        "Destination": "idi.sample.data\\Dapper"
       }
     ],
     "DataProviders": [
@@ -19,56 +19,56 @@
         "TypeName": "SQLModelDataProvider",
         "UseLocalDataSource": false,
         "LocalDataSource": "",
-        "DataSource": "Data Source=localhost;Initial Catalog=sample;Integrated Security=SSPI;"
+        "DataSource": "Data Source=localhost;Initial Catalog=idi_sample;Integrated Security=SSPI;"
       }
     ],
     "Templates": [
       {
         "Type": "Model",
         "Name": "EntityModels",
-        "Namespace": "Sample.data.Entities",
+        "Namespace": "idi.sample.data.Entities",
         "IsStub": false,
         "InputRelativePath": "EntityModel.txt",
-        "OutputRelativePath": "Sample.data\\Entities\\{0}.cs",
+        "OutputRelativePath": "idi.sample.data\\Entities\\{0}.cs",
         "Language": "csharp",
-        "RunOnce": false,
+        
         "DataProviderName": "SQLModelsDataProvider",
         "Imports": [
-          "Sample.data.Dapper.Models.Base",
+          "idi.sample.data.Dapper.Models.Base",
           "System.Collections.Generic"
         ]
       },
       {
         "Type": "Model",
         "Name": "Gateway",
-        "Namespace": "Sample.Data.Gateway",
+        "Namespace": "idi.sample.Data.Gateway",
         "IsStub": false,
         "InputRelativePath": "Gateway.txt",
-        "OutputRelativePath": "Sample.data\\Gateway\\Dapper\\{0}DapperGateway.cs",
+        "OutputRelativePath": "idi.sample.data\\Gateway\\Dapper\\{0}DapperGateway.cs",
         "Language": "csharp",
-        "RunOnce": false,
+        
         "DataProviderName": "SQLModelsDataProvider",
         "Imports": [
-          "Sample.Data.Gateway.Base",
-          "Sample.Data.Interfaces",
+          "idi.sample.Data.Gateway.Base",
+          "idi.sample.Data.Interfaces",
           "Microsoft.Extensions.Logging"
         ]
       },
       {
         "Type": "Model",
         "Name": "BaseGateway",
-        "Namespace": "Sample.Data.Gateway.Base",
+        "Namespace": "idi.sample.Data.Gateway.Base",
         "IsStub": false,
         "InputRelativePath": "BaseGateway.txt",
-        "OutputRelativePath": "Sample.data\\Gateway\\Dapper\\Base\\{0}DapperGatewayBase.cs",
+        "OutputRelativePath": "idi.sample.data\\Gateway\\Dapper\\Base\\{0}DapperGatewayBase.cs",
         "Language": "csharp",
-        "RunOnce": false,
+        
         "DataProviderName": "SQLModelsDataProvider",
         "Imports": [
           "Dapper",
-          "Sample.data.Dapper.Interfaces",
-          "Sample.data.Dapper",
-          "Sample.data.Dapper.Models",
+          "idi.sample.data.Dapper.Interfaces",
+          "idi.sample.data.Dapper",
+          "idi.sample.data.Dapper.Models",
           "Microsoft.Extensions.Logging",
           "System.Threading.Tasks"
         ]
@@ -76,16 +76,16 @@
       {
         "Type": "Model",
         "Name": "GatewayInterface",
-        "Namespace": "Sample.Data.Interfaces",
+        "Namespace": "idi.sample.Data.Interfaces",
         "IsStub": false,
         "InputRelativePath": "GatewayInterface.txt",
-        "OutputRelativePath": "Sample.data\\Gateway\\Interfaces\\I{0}Gateway.cs",
+        "OutputRelativePath": "idi.sample.data\\Gateway\\Interfaces\\I{0}Gateway.cs",
         "Language": "csharp",
-        "RunOnce": false,
+        
         "DataProviderName": "SQLModelsDataProvider",
         "Imports": [
-          "Sample.data.Dapper",
-          "Sample.models"
+          "idi.sample.data.Dapper",
+          "idi.sample.models"
         ]
       }
     ]

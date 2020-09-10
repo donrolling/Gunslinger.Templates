@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
 
@@ -18,6 +20,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Gunslinger\Gunslinger.csproj" />
+    <ProjectReference Include="..\Engine\Gunslinger.csproj" />
   </ItemGroup>
 </Project>

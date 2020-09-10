@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CompositionRoot\CompositionRoot.csproj" />
-    <ProjectReference Include="..\Gunslinger\Gunslinger.csproj" />
+    <ProjectReference Include="..\Engine\Gunslinger.csproj" />
   </ItemGroup>
 
   <ItemGroup>
