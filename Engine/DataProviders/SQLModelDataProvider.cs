@@ -31,7 +31,7 @@ namespace Gunslinger.DataProviders
                 var providerModels = new Dictionary<string, IProviderModel>();
                 foreach (var sqlTable in sqlTables)
                 {
-                    var sqlModel = SQLModelFactory.Create(sqlTable);
+                    var sqlModel = SQLModelFactory.Create(sqlTable, settings);
                     providerModels.Add(sqlTable.UniqueName, sqlModel);
                 }
                 return OperationResult<Dictionary<string, IProviderModel>>.Ok(providerModels);

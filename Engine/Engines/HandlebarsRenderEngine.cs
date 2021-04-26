@@ -13,7 +13,35 @@ namespace Gunslinger.Engines
             // register an ifCond helper so I can write if statements in the templates
             Handlebars.RegisterHelper("ifCond", (writer, options, context, arguments) =>
             {
-                if (arguments[0] == arguments[1])
+                var type0 = arguments[0].GetType().Name;
+                var type1 = arguments[0].GetType().Name;
+                if (type0 == "String" && type1 == "String")
+                {
+                    if (arguments[0].Equals(arguments[1]))
+                    {
+                        options.Template(writer, (object)context);
+                    }
+                    else
+                    {
+                        options.Inverse(writer, (object)context);
+                    }
+                }
+                else
+                {
+                    if (arguments[0] == arguments[1])
+                    {
+                        options.Template(writer, (object)context);
+                    }
+                    else
+                    {
+                        options.Inverse(writer, (object)context);
+                    }
+                }                
+            });
+            // register an ifCond helper so I can write if statements in the templates
+            Handlebars.RegisterHelper("boolCond", (writer, options, context, arguments) =>
+            {
+                if ((bool)arguments[0])
                 {
                     options.Template(writer, (object)context);
                 }

@@ -8,37 +8,22 @@
     "IncludeTheseEntitiesOnly": [],
     "IncludeTheseTemplatesOnly": [],
     "DataProviders": [
-        {
-            "Name": "GenesysModelsDataProvider",
-            "TypeName": "SwaggerDataProvider",
-            "UseLocalDataSource": false,
-            "DataSource": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/petstore-expanded.json"
-        },
       {
         "Name": "SampleModelsDataProvider",
         "TypeName": "SwaggerDataProvider",
         "UseLocalDataSource": true,
         "LocalDataSource": "C:\\Projects\\mustache.stubble.templating\\Example\\devapi.swagger.petstore.json",
         "DataSource": ""
+      },
+      {
+        "Name": "SQLModelsDataProvider",
+        "TypeName": "SQLModelDataProvider",
+        "UseLocalDataSource": false,
+        "LocalDataSource": "",
+        "DataSource": "Data Source=localhost;Initial Catalog=test;Integrated Security=SSPI;"
       }
     ],
     "Templates": [
-      {
-        "Type": "Model",
-        "Name": "GenesysModels",
-        "Namespace": "Models",
-        "IsStub": false,
-        "InputRelativePath": "Model.txt",
-        "OutputRelativePath": "GenesysModels\\{0}.cs",
-        "Language": "csharp",
-        
-        "DataProviderName": "GenesysModelsDataProvider",
-        "Imports": [
-          "System.Runtime.Serialization",
-          "System.Text",
-          "Newtonsoft.Json"
-        ]
-      },
       {
         "Type": "Model",
         "Name": "SampleModels",

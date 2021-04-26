@@ -11,7 +11,7 @@ namespace Gunslinger.Factories.SQL
 {
     public class SQLTableFactory
     {
-        public static IEnumerable<SQLTable> Create(string @namespace, Enum.TemplateLanguage language, IEnumerable<Table> tables)
+        public static IEnumerable<SQLTable> Create(string @namespace, Enum.Language language, IEnumerable<Table> tables)
         {
             // get all the foreign key meta data first
             var sqlForeignKeys = ForeignKeyFactory.Create(tables);
@@ -37,7 +37,7 @@ namespace Gunslinger.Factories.SQL
             return sqlTable;
         }
 
-        private static OperationResult<SQLBasicTable> createBasicTable(string @namespace, Enum.TemplateLanguage language, Table table)
+        private static OperationResult<SQLBasicTable> createBasicTable(string @namespace, Enum.Language language, Table table)
         {
             if (string.IsNullOrEmpty(table.Name))
             {
@@ -76,7 +76,7 @@ namespace Gunslinger.Factories.SQL
             return result;
         }
 
-        private static List<SQLColumn> getSQLColumns(Name modelName, Enum.TemplateLanguage language, ColumnCollection columns)
+        private static List<SQLColumn> getSQLColumns(Name modelName, Enum.Language language, ColumnCollection columns)
         {
             var result = new List<SQLColumn>();
             foreach (Column column in columns)

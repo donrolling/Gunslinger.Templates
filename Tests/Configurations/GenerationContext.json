@@ -1,5 +1,5 @@
 {
-  "OutputDirectory": "C:\\Projects\\Gunslinger.Templates\\SampleProject",
+  "OutputDirectory": "SampleProject",
   "ProcessTemplateStubs": false,
   "TemplateDirectory": "Templates",
   "ExcludeTheseEntities": [ "Item" ],

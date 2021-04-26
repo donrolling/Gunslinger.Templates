@@ -10,7 +10,7 @@ namespace Gunslinger.Models
         public bool DeleteAllItemsInOutputDirectory { get; set; } = true;
         public List<string> Imports { get; set; } = new List<string>();
         public bool IsStub { get; set; }
-        public TemplateLanguage Language { get; set; }
+        public Language Language { get; set; }
         public string Name { get; set; }
         public string Namespace { get; set; }
         public string InputRelativePath { get; set; }

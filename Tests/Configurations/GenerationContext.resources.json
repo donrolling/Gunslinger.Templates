@@ -1,6 +1,6 @@
 {
   "GenerationContext": {
-    "OutputDirectory": "C:\\\\Projects\\\Idi.Templating.Mustache\\SampleProject",
+    "OutputDirectory": "SampleProject",
     "ProcessTemplateStubs": false,
     "TemplateDirectory": "Templates",
     "ExcludeTheseEntities": [ "Item" ],

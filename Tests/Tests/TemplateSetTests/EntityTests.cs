@@ -1,25 +1,26 @@
 ﻿using Gunslinger.Interfaces;
-using Gunslinger.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Linq;
 using Tests.Utilities;
 
 namespace Tests.Tests
 {
     [TestClass]
-    public class ReflectionTests
+    public class EntityTests
     {
         private readonly IGeneratorFacade _generatorFacade;
 
-        public ReflectionTests()
+        public EntityTests()
         {
-            _generatorFacade = TestBootstrapper.GetGeneratorFacade("Configurations\\ReflectionConfig.json");
+            _generatorFacade = TestBootstrapper.GetGeneratorFacade("Configurations\\GenerationContext.Entities.json");
         }
 
         [TestMethod]
         public void RunAllTemplates()
         {
             var result = _generatorFacade.Generate();
-            Assert.IsTrue(result.Success);
+            Assert.IsTrue(result.Success, result.Message);
         }
     }
 }

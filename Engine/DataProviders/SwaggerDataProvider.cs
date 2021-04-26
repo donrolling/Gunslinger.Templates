@@ -242,11 +242,10 @@ namespace Gunslinger.DataProviders
         {
             var isNullable = getNullableStatus(requiredProperties, key, value);
             var type = getDataType(value, isNullable);
-            var propertyName = fixPropertyName(key);
             var propertyDescription = value["description"] != null ? value["description"].ToString() : string.Empty;
             var prop = new Property
             {
-                Name = NameFactory.Create(propertyName),
+                Name = NameFactory.Create(key),
                 Type = type,
                 Description = propertyDescription,
                 IsNullable = isNullable
@@ -262,10 +261,8 @@ namespace Gunslinger.DataProviders
             // Instead, under normal circumstances we should use the nullable property
             if (value["nullable"] == null)
             {
-                // The Genesys API isn't very strict about the way the API is documented.
-                // Therefore, I made a setting that allows the engine to interpret the lack of 
+                // I made a setting that allows the engine to interpret the lack of 
                 // a nullable specification as a request for a nullable property.
-                // Historically, IDI has been assuming that all Genesys properties are nullable.
                 // That is odd, but here we are.
                 if (_dataProviderSettings.NonSpecifiedPropertiesAreNullable)
                 {

@@ -1,0 +1,73 @@
+{
+    "OutputDirectory": "Output\\Stubs",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [ "Item" ],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [
+    ],
+    "DataProviders": [
+        {
+            "Name": "SQLModelsDataProvider",
+            "TypeName": "SQLModelDataProvider",
+            "UseLocalDataSource": false,
+            "LocalDataSource": "",
+            "DataSource": "Data Source=localhost;Initial Catalog=sample;Integrated Security=SSPI;"
+        }
+    ],
+    "Templates": [
+        {
+            "Type": "Model",
+            "Name": "Gateway",
+            "Namespace": "sample.Data.Gateway",
+            "IsStub": true,
+            "InputRelativePath": "Gateway.txt",
+            "OutputRelativePath": "{entityName}DapperGateway.cs",
+            "Language": "csharp",
+
+            "DataProviderName": "SQLModelsDataProvider",
+            "Imports": [
+                "sample.Data.Gateway.Base",
+                "sample.Data.Interfaces",
+                "Microsoft.Extensions.Logging"
+            ]
+        },
+        {
+            "Type": "Model",
+            "Name": "BaseGateway",
+            "Namespace": "sample.Data.Gateway.Base",
+            "IsStub": true,
+            "InputRelativePath": "BaseGateway.txt",
+            "OutputRelativePath": "{entityName}DapperGatewayBase.cs",
+            "Language": "csharp",
+
+            "DataProviderName": "SQLModelsDataProvider",
+            "Imports": [
+                "Dapper",
+                "Dapper.SQLGateway",
+                "Dapper.SQLGateway.Interfaces",
+                "Dapper.SQLGateway.Models",
+                "sample.data.Entities",
+                "Microsoft.Extensions.Logging",
+                "System.Threading.Tasks"
+            ]
+        },
+        {
+            "Type": "Model",
+            "Name": "GatewayInterface",
+            "Namespace": "sample.Data.Interfaces",
+            "IsStub": true,
+            "InputRelativePath": "GatewayInterface.txt",
+            "OutputRelativePath": "I{entityName}Gateway.cs",
+            "Language": "csharp",
+
+            "DataProviderName": "SQLModelsDataProvider",
+            "Imports": [
+                "Dapper.SQLGateway.Interfaces",
+                "sample.data.Entities"
+            ]
+        }
+    ]
+}

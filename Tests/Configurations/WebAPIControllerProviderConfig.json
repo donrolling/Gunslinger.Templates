@@ -1,0 +1,46 @@
+{
+    "OutputDirectory": "Output",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [],
+    "DataProviders": [
+        {
+            "Name": "WebAPIDataProvider",
+            "TypeName": "WebAPIDataProvider",
+            "Namespaces": [
+                "Marketplace.WebApi.Api"
+            ],
+            "DataSource": "C:\\Projects\\market\\Marketplace.WebApi\\bin\\Marketplace.WebApi.dll"
+        }
+    ],
+    "Templates": [
+        {
+            "ExcludeTheseTypes": [
+                "HttpActionContext",
+                "HttpConfiguration",
+                "HttpControllerContext",
+                "HttpRequestContext",
+                "HttpRequestMessage",
+                "HttpResponseMessage",
+                "IPrincipal",
+                "ModelStateDictionary",
+                "UrlHelper",
+                "TEntity"
+            ],
+            "Type": "Model",
+            "Name": "WebAPIModels",
+            "Namespace": "Reflection",
+            "IsStub": false,
+            "InputRelativePath": "JavascriptAPIService.txt",
+            "OutputRelativePath": "API\\Services\\{entityName}.ts",
+            "Language": "javascript",
+            "DataProviderName": "WebAPIDataProvider",
+            "Imports": [
+            ]
+        }
+    ]
+}

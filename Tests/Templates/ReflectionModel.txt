@@ -1,0 +1,14 @@
+﻿{{#Imports}}
+using {{.}};
+{{/Imports}}
+
+export class {{Name.Value}} 
+{
+    {{#Properties}}
+    {{#if IsNullable}}
+    public {{Name.Value}}?: {{{JavascriptDataType}}};
+    {{else}}
+    public {{Name.Value}}: {{{JavascriptDataType}}};
+    {{/if}}
+    {{/Properties}}
+}

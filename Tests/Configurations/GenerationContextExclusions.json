@@ -1,0 +1,38 @@
+{
+    "OutputDirectory": "Output\\Exclusions",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [ "migration.SchemaVersions" ],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [
+    ],
+    "DataProviders": [
+        {
+            "Name": "SQLModelsDataProvider",
+            "TypeName": "SQLModelDataProvider",
+            "UseLocalDataSource": false,
+            "LocalDataSource": "",
+            "DataSource": "Data Source=localhost;Initial Catalog=sample;Integrated Security=SSPI;"
+        }
+    ],
+    "Templates": [
+        {
+            "Type": "Model",
+            "Name": "Gateway",
+            "Namespace": "sample.Data.Gateway",
+            "ExcludeTheseTypes": [ "Address" ],
+            "IsStub": false,
+            "InputRelativePath": "Gateway.txt",
+            "OutputRelativePath": "{entityName}.cs",
+            "Language": "csharp",
+            "DataProviderName": "SQLModelsDataProvider",
+            "Imports": [
+                "sample.Data.Gateway.Base",
+                "sample.Data.Interfaces",
+                "Microsoft.Extensions.Logging"
+            ]
+        }
+    ]
+}

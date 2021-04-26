@@ -15,6 +15,7 @@ namespace Gunslinger.Factories
             {
                 Value = name,
                 LowerCamelCase = rgx.Replace(StringConversion.Convert(name, StringCase.LowerCamelCase), ""),
+                PascalCase = rgx.Replace(StringConversion.Convert(name, StringCase.PascalCase), ""),
                 NameWithSpaces = name.UnCamelCase(),
             };
         }

@@ -1,6 +1,6 @@
 ﻿namespace Gunslinger.Enum
 {
-    public enum TemplateLanguage
+    public enum Language
     {
         csharp,
         sql,
