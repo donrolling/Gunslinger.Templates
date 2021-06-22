@@ -6,3 +6,6 @@ I'm continuing in the tradition of naming this tool after a style of facial hair
 
 Gunslinger Beard:
 https://user-images.githubusercontent.com/1778167/122961824-64603780-d34a-11eb-887b-578300dd290c.png
+
+Use the wiki to see documentation and explanation of different elements.
+https://github.com/donrolling/Gunslinger.Templates/wiki
