@@ -5,4 +5,4 @@ The Gunslinger templating engine is built on top of the Handlebars templating sy
 I'm continuing in the tradition of naming this tool after a style of facial hair, so please see the link below for examples of the gunslinger beard.
 
 Gunslinger Beard:
-https://www.beard.org.in/moustache/macho-gunslinger-moustache/
+https://user-images.githubusercontent.com/1778167/122961824-64603780-d34a-11eb-887b-578300dd290c.png
