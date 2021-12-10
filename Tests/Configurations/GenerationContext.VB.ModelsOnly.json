@@ -1,0 +1,43 @@
+{
+    "OutputDirectory": "Output",
+    "ProcessTemplateStubs": false,
+    "TemplateDirectory": "Templates",
+    "ExcludeTheseEntities": [ "Item" ],
+    "ExcludeTheseTemplates": [],
+    "IncludeTheseEntitiesOnly": [],
+    "IncludeTheseTemplatesOnly": [],
+    "Resources": [
+    ],
+    "DataProviders": [
+        {
+            "Name": "SQLModelsDataProvider",
+            "TypeName": "SQLModelDataProvider",
+            "UseLocalDataSource": false,
+            "LocalDataSource": "",
+            "DataSource": "Data Source=localhost;Initial Catalog=payments_dev;Integrated Security=SSPI;"
+        }
+    ],
+    "AuditProperties": [
+        "CreatedDate",
+        "CreatedBy",
+        "ModifiedDate",
+        "ModifiedBy"
+    ],
+    "Templates": [
+        {
+            "Type": "Model",
+            "Name": "EntityModels",
+            "Namespace": "sample.data.Entities",
+            "IsStub": false,
+            "InputRelativePath": "EntityModel.txt",
+            "OutputRelativePath": "sample.data\\Entities\\{entityName}.cs",
+            "Language": "csharp",
+            "DataProviderName": "SQLModelsDataProvider",
+            "Imports": [
+                "Dapper.SQLGateway.Models.Base",
+                "System",
+                "System.Collections.Generic"
+            ]
+        }
+    ]
+}

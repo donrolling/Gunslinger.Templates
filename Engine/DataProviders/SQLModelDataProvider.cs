@@ -34,15 +34,11 @@ namespace Gunslinger.DataProviders
                     var sqlModel = SQLModelFactory.Create(sqlTable, settings);
                     providerModels.Add(sqlTable.UniqueName, sqlModel);
                 }
-                return OperationResult<Dictionary<string, IProviderModel>>.Ok(providerModels);
+                return OperationResult.Ok(providerModels);
             }
             catch (System.Exception ex)
             {
-                return new OperationResult<Dictionary<string, IProviderModel>>
-                {
-                    Failure = true,
-                    Message = $"SQL Database Data Provider had a failure: { ex.Message }\r\n{ ex.StackTrace }",
-                };
+                return OperationResult.Fail<Dictionary<string, IProviderModel>>($"SQL Database Data Provider had a failure: { ex.Message }\r\n{ ex.StackTrace }");
             }
         }
     }

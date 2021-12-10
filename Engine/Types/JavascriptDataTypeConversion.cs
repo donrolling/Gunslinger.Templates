@@ -28,7 +28,7 @@ namespace Gunslinger.Types
                 clone.ListType = "Array";
                 return clone;
             }
-            catch (System.Exception ex)
+            catch 
             {
                 throw;
             }

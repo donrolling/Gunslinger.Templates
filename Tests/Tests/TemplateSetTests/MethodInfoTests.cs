@@ -15,7 +15,6 @@ namespace Tests.Tests
     {
         private readonly IGeneratorFacade _generatorFacade;
         private readonly ITemplateOutputEngine _templateOutputEngine;
-        private readonly string _outputDirectory;
 
         public MethodInfoTests()
         {

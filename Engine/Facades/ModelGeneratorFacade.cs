@@ -140,7 +140,7 @@ namespace Gunslinger.Facades
         {
             var dataProvider = _dataProviderFactory.Get(template.DataProviderName);
             var getResult = dataProvider.Get(settings, template, settings.IncludeTheseEntitiesOnly, settings.ExcludeTheseEntities);
-            if (getResult.Failure)
+            if (getResult.Failed)
             {
                 return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail(getResult.Message));
             }

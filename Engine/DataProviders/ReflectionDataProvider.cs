@@ -32,11 +32,11 @@ namespace Gunslinger.DataProviders
             }
             catch (Exception ex)
             {
-                return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail($"Could not load dll: { _dataProviderSettings.DataSource }\r\n\t{ ex.Message }"));
+                return OperationResult.Fail<Dictionary<string, IProviderModel>>($"Could not load dll: { _dataProviderSettings.DataSource }\r\n\t{ ex.Message }");
             }
             if (assembly == null)
             {
-                return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail($"Could not load dll: { _dataProviderSettings.DataSource }"));
+                return OperationResult.Fail<Dictionary<string, IProviderModel>>($"Could not load dll: { _dataProviderSettings.DataSource }");
             }
             var result = new Dictionary<string, IProviderModel>();
             foreach (var ns in _dataProviderSettings.Namespaces)

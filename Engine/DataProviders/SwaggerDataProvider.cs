@@ -36,9 +36,9 @@ namespace Gunslinger.DataProviders
         public OperationResult<Dictionary<string, IProviderModel>> Get(GenerationSettings settings, Template template, List<string> includeTheseEntitiesOnly, List<string> excludeTheseEntities)
         {
             var dataResult = getData(settings);
-            if (dataResult.Failure)
+            if (dataResult.Failed)
             {
-                return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail(dataResult.Message));
+                return OperationResult.Fail<Dictionary<string, IProviderModel>>(dataResult.Message);
             }
             var data = dataResult.Result;
             try
@@ -77,7 +77,7 @@ namespace Gunslinger.DataProviders
             }
             catch (Exception ex)
             {
-                return new OperationResult<Dictionary<string, IProviderModel>>(OperationResult.Fail($"Swagger Data Provider - Failed to parse data from provider.\r\n\t{ ex.Message }\r\n\tData: { data }"));
+                return OperationResult.Fail<Dictionary<string, IProviderModel>>($"Swagger Data Provider - Failed to parse data from provider.\r\n\t{ ex.Message }\r\n\tData: { data }");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Gunslinger.DataProviders
             {
                 if (string.IsNullOrEmpty(_dataProviderSettings.LocalDataSource))
                 {
-                    return new OperationResult<string>(OperationResult.Fail("DataProvider is set to use a local file source, but the path is not specified."));
+                    return OperationResult.Fail<string>("DataProvider is set to use a local file source, but the path is not specified.");
                 }
                 try
                 {
@@ -97,14 +97,14 @@ namespace Gunslinger.DataProviders
                 }
                 catch (Exception ex)
                 {
-                    return new OperationResult<string>(OperationResult.Fail($"DataProvider failed to read file: { _dataProviderSettings.LocalDataSource }.\r\n{ ex.Message }\r\n{ ex.StackTrace }"));
+                    return OperationResult.Fail<string>($"DataProvider failed to read file: { _dataProviderSettings.LocalDataSource }.\r\n{ ex.Message }\r\n{ ex.StackTrace }");
                 }
             }
             else
             {
                 if (string.IsNullOrEmpty(_dataProviderSettings.DataSource))
                 {
-                    return new OperationResult<string>(OperationResult.Fail("DataProvider is set to use a network data source, but the path is not specified."));
+                    return OperationResult.Fail<string>("DataProvider is set to use a network data source, but the path is not specified.");
                 }
                 try
                 {
@@ -113,7 +113,7 @@ namespace Gunslinger.DataProviders
                 }
                 catch (Exception ex)
                 {
-                    return new OperationResult<string>(OperationResult.Fail($"DataProvider failed to make an http call to: { _dataProviderSettings.DataSource }.\r\n{ ex.Message }\r\n{ ex.StackTrace }"));
+                    return OperationResult.Fail<string>($"DataProvider failed to make an http call to: { _dataProviderSettings.DataSource }.\r\n{ ex.Message }\r\n{ ex.StackTrace }");
                 }
             }
         }
