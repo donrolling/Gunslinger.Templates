@@ -1,4 +1,5 @@
 {
+  "OutputDirectory": "Output",
   "ProcessTemplateStubs": false,
   "TemplateDirectory": "Templates",
   "ExcludeTheseEntities": [ "Item" ],
@@ -25,7 +26,7 @@
       "InputRelativePath": "EntityModel.txt",
       "OutputRelativePath": "sample.data\\Entities\\{entityName}.cs",
       "Language": "csharp",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "Dapper.SQLGateway.Models.Base",
@@ -41,7 +42,7 @@
       "InputRelativePath": "Gateway.txt",
       "OutputRelativePath": "sample.data\\Gateway\\Dapper\\{entityName}DapperGateway.cs",
       "Language": "csharp",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "sample.Data.Gateway.Base",
@@ -57,7 +58,7 @@
       "InputRelativePath": "BaseGateway.txt",
       "OutputRelativePath": "sample.data\\Gateway\\Dapper\\Base\\{entityName}DapperGatewayBase.cs",
       "Language": "csharp",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "Dapper",
@@ -78,7 +79,7 @@
       "InputRelativePath": "GatewayInterface.txt",
       "OutputRelativePath": "sample.data\\Gateway\\Interfaces\\I{entityName}Gateway.cs",
       "Language": "csharp",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "Dapper.SQLGateway.Interfaces",
@@ -93,7 +94,7 @@
       "InputRelativePath": "DataAccessTest.txt",
       "OutputRelativePath": "sample.test\\DataAccess\\{entityName}_CRUD_Test.cs",
       "Language": "csharp",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "AutoFixture",
@@ -115,7 +116,7 @@
       "InputRelativePath": "InsertProcedure.txt",
       "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Insert.sql",
       "Language": "sql",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": []
     },
@@ -127,7 +128,7 @@
       "InputRelativePath": "UpdateProcedure.txt",
       "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Update.sql",
       "Language": "sql",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": []
     },
@@ -139,7 +140,7 @@
       "InputRelativePath": "DeleteProcedure.txt",
       "OutputRelativePath": "sample.database\\{schema}\\Stored Procedures\\{entityName}_Delete.sql",
       "Language": "sql",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": []
     },
@@ -151,7 +152,7 @@
       "InputRelativePath": "DataAccessTestInjectionWireUp.txt",
       "OutputRelativePath": "sample.test\\Injection\\DataAccess.cs",
       "Language": "sql",
-      
+
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
         "sample.Data.Gateway",

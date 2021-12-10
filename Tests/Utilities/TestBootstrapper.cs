@@ -27,7 +27,7 @@ namespace Tests.Utilities
             // make sure that the OutputDirectory goes to root\\Output\\whatever
             var directories = AppDomain.CurrentDomain.BaseDirectory.Split("\\bin\\")[0].Split("\\");
             var baseDirectory = string.Join('\\', directories.Take(directories.Length - 1));
-            generatorFacade.Context.OutputDirectory = $"{ baseDirectory }\\Output\\{ generatorFacade.Context.OutputDirectory }";
+            generatorFacade.Context.OutputDirectory = $"{ baseDirectory }\\{ generatorFacade.Context.OutputDirectory }";
             foreach (var dataProvider in generatorFacade.Context.DataProviders)
             {
                 if (!string.IsNullOrEmpty(dataProvider["LocalDataSource"].Value))
