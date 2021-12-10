@@ -6,6 +6,6 @@ namespace Gunslinger.Interfaces
 {
     public interface ISQLServerInfoFactory
     {
-        SQLServerInfo Create(DataProviderSettings dataProviderSettings);
+        SQLServerInfo Create(SQLDataProviderSettings dataProviderSettings);
     }
 }

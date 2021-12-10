@@ -2,41 +2,42 @@
   "OutputDirectory": "Output",
   "ProcessTemplateStubs": false,
   "TemplateDirectory": "Templates",
-  "ExcludeTheseEntities": [ "Item" ],
+  "ExcludeTheseEntities": [
+    "System",
+    "TableAudit",
+    "SystemAttributes"
+  ],
   "ExcludeTheseTemplates": [],
   "IncludeTheseEntitiesOnly": [],
   "IncludeTheseTemplatesOnly": [],
-  "Resources": [
-  ],
+  "Resources": [],
   "DataProviders": [
     {
       "Name": "SQLModelsDataProvider",
       "TypeName": "SQLModelDataProvider",
+      "GenerateViews":  true,
       "UseLocalDataSource": false,
       "LocalDataSource": "",
       "DataSource": "Data Source=7CSM-DBS01-DC1;Initial Catalog=CS_SPL;Integrated Security=true"
     }
   ],
-  "AuditProperties": [
-    "CreatedDate",
-    "CreatedBy",
-    "ModifiedDate",
-    "ModifiedBy"
-  ],
+  "AuditProperties": [],
   "Templates": [
     {
       "Type": "Model",
       "Name": "EntityModels",
-      "Namespace": "Entities",
+      "Namespace": "VirtualBinder.Data.Models",
       "IsStub": false,
-      "InputRelativePath": "EntityModel.txt",
-      "OutputRelativePath": "Entities\\{entityName}.cs",
+      "InputRelativePath": "VBModel.txt",
+      "OutputRelativePath": "Models\\{entityName}.cs",
       "Language": "csharp",
       "DataProviderName": "SQLModelsDataProvider",
       "Imports": [
-        "Dapper.SQLGateway.Models.Base",
         "System",
-        "System.Collections.Generic"
+        "System.Collections.Generic",
+        "System.ComponentModel.DataAnnotations",
+        "System.ComponentModel.DataAnnotations.Schema",
+        "System.Data.Entity.Spatial"
       ]
     }
   ]

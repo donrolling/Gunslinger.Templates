@@ -23,26 +23,26 @@ namespace Gunslinger.Factories.SQL
         {
         }
 
-        public SQLServerInfo Create(DataProviderSettings dataProvider)
+        public SQLServerInfo Create(SQLDataProviderSettings settings)
         {
             //don't construct this stuff twice
-            if (_sqlServerInfo.ContainsKey(dataProvider.Name))
+            if (_sqlServerInfo.ContainsKey(settings.Name))
             {
-                return _sqlServerInfo[dataProvider.Name];
+                return _sqlServerInfo[settings.Name];
             }
 
-            var builder = new SqlConnectionStringBuilder(dataProvider.DataSource);
+            var builder = new SqlConnectionStringBuilder(settings.DataSource);
             var sqlServerInfo = new SQLServerInfo
             {
                 DatabaseName = builder.InitialCatalog,
-                DataProvider = dataProvider,
+                DataProvider = settings,
                 Server = new Server(builder.DataSource),
                 ServerName = builder.DataSource,
             };
             sqlServerInfo.Database = new Database(sqlServerInfo.Server, sqlServerInfo.DatabaseName);
 
             //add it to the list
-            _sqlServerInfo.Add(dataProvider.Name, sqlServerInfo);
+            _sqlServerInfo.Add(settings.Name, sqlServerInfo);
 
             return sqlServerInfo;
         }

@@ -14,7 +14,6 @@ namespace Gunslinger.Factories.SQL
         {
             //can't use linq expression here because TableCollection is gross
             var tables = new List<Table>();
-            sqlServerInfo.Database.Refresh();
             var whiteList = includeTheseEntitiesOnly.Any();
             var blackList = excludeTheseEntities.Any();
             foreach (Table table in sqlServerInfo.Database.Tables)

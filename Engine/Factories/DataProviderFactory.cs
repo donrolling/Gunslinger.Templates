@@ -33,50 +33,51 @@ namespace Gunslinger.Factories
         public IDataProvider Create(dynamic dataProviderSettings)
         {
             var allSettings = JsonConvert.SerializeObject(dataProviderSettings);
-            DataProviderSettings settings = JsonConvert.DeserializeObject<DataProviderSettings>(allSettings);
-            if (_dataProviderDictionary.ContainsKey(settings.Name))
+            var generalSettings = JsonConvert.DeserializeObject<DataProviderSettings>(allSettings);
+            if (_dataProviderDictionary.ContainsKey(generalSettings.Name))
             {
-                return _dataProviderDictionary[settings.Name];
+                return _dataProviderDictionary[generalSettings.Name];
             }
-            if (settings.OpenDataSourceUrlInDefaultBrowser)
-            {
-                openDataSourceInBrowser(settings.DataSource);
-                // wait for the browser to load the file
-                Thread.Sleep(TimeSpan.FromSeconds(10));
-            }
-            switch (settings.TypeName)
+            switch (generalSettings.TypeName)
             {
                 case "SwaggerDataProvider":
                     var swaggerDataProviderSettings = JsonConvert.DeserializeObject<SwaggerDataProviderSettings>(allSettings);
+					if (swaggerDataProviderSettings.OpenDataSourceUrlInDefaultBrowser)
+					{
+						openDataSourceInBrowser(swaggerDataProviderSettings.DataSource);
+						// wait for the browser to load the file
+						Thread.Sleep(TimeSpan.FromSeconds(10));
+					}
                     var swaggerDataProvider = new SwaggerDataProvider(swaggerDataProviderSettings, this._loggerFactory);
-                    _dataProviderDictionary.Add(settings.Name, swaggerDataProvider);
+                    _dataProviderDictionary.Add(swaggerDataProviderSettings.Name, swaggerDataProvider);
                     return swaggerDataProvider;
 
                 case "SQLModelDataProvider":
-                    var sqlModelDataProvider = new SQLModelDataProvider(_sqlServerInfoFactory, settings, this._loggerFactory);
-                    _dataProviderDictionary.Add(settings.Name, sqlModelDataProvider);
+                    var sqlDataProviderSettings = JsonConvert.DeserializeObject<SQLDataProviderSettings>(allSettings);
+                    var sqlModelDataProvider = new SQLModelDataProvider(_sqlServerInfoFactory, sqlDataProviderSettings, this._loggerFactory);
+                    _dataProviderDictionary.Add(sqlDataProviderSettings.Name, sqlModelDataProvider);
                     return sqlModelDataProvider;
 
-                case "ReflectionDataProvider":
-                    var reflectionDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                    var reflectionDataProvider = new ReflectionDataProvider(reflectionDataProviderSettings, this._loggerFactory);
-                    _dataProviderDictionary.Add(settings.Name, reflectionDataProvider);
-                    return reflectionDataProvider;
+                //case "ReflectionDataProvider":
+                //    var reflectionDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                //    var reflectionDataProvider = new ReflectionDataProvider(reflectionDataProviderSettings, this._loggerFactory);
+                //    _dataProviderDictionary.Add(settings.Name, reflectionDataProvider);
+                //    return reflectionDataProvider;
 
-                case "ReflectionMethodInfoDataProvider":
-                    var reflectionMethodInfoDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                    var reflectionMethodInfoDataProvider = new MethodInfoDataProvider(reflectionMethodInfoDataProviderSettings, this._loggerFactory);
-                    _dataProviderDictionary.Add(settings.Name, reflectionMethodInfoDataProvider);
-                    return reflectionMethodInfoDataProvider;
+                //case "ReflectionMethodInfoDataProvider":
+                //    var reflectionMethodInfoDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                //    var reflectionMethodInfoDataProvider = new MethodInfoDataProvider(reflectionMethodInfoDataProviderSettings, this._loggerFactory);
+                //    _dataProviderDictionary.Add(settings.Name, reflectionMethodInfoDataProvider);
+                //    return reflectionMethodInfoDataProvider;
 
-                case "WebAPIDataProvider":
-                    var webAPIDataProviderDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                    var webAPIDataProviderDataProvider = new WebAPIDataProvider(webAPIDataProviderDataProviderSettings, this._loggerFactory);
-                    _dataProviderDictionary.Add(settings.Name, webAPIDataProviderDataProvider);
-                    return webAPIDataProviderDataProvider;
+                //case "WebAPIDataProvider":
+                //    var webAPIDataProviderDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
+                //    var webAPIDataProviderDataProvider = new WebAPIDataProvider(webAPIDataProviderDataProviderSettings, this._loggerFactory);
+                //    _dataProviderDictionary.Add(settings.Name, webAPIDataProviderDataProvider);
+                //    return webAPIDataProviderDataProvider;
 
                 default:
-                    var msg = $"Create() - Name not matched: { settings.TypeName }";
+                    var msg = $"Create() - Name not matched: { generalSettings.TypeName }";
                     this.Logger.LogError(msg);
                     throw new Exception(msg);
             }
