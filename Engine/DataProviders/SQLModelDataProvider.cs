@@ -4,6 +4,7 @@ using Gunslinger.Factories.SQL;
 using Gunslinger.Interfaces;
 using Gunslinger.Models;
 using Gunslinger.Models.Settings;
+using Gunslinger.Models.SQL;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Management.Smo;
 using System.Collections.Generic;
@@ -29,12 +30,12 @@ namespace Gunslinger.DataProviders
 				var sqlServerInfo = _sqlServerInfoFactory.Create(_dataProviderSettings);
 				sqlServerInfo.Database.Refresh();
 				var smoTables = TableInfoFactory.Create(sqlServerInfo, settings, includeTheseEntitiesOnly, excludeTheseEntities);
-				var gunslingerTables = SQLTableFactory.Create(template.Namespace, template.Language, smoTables);
+				var gunslingerTables = SQLTableFactory.Create(template.Namespace, template.Language, smoTables, template);
 				var smoViews = _dataProviderSettings.GenerateViews
 					? ViewInfoFactory.Create(sqlServerInfo, settings, includeTheseEntitiesOnly, excludeTheseEntities)
 					: new List<View>();
 				var gunslingerViews = _dataProviderSettings.GenerateViews 
-					? SQLViewFactory.Create(template.Namespace, template.Language, smoViews)
+					? SQLViewFactory.Create(template.Namespace, template.Language, smoViews, template)
 					: new List<SQLView>();
 				var providerModels = new Dictionary<string, IProviderModel>();
 				foreach (var gunslingerTable in gunslingerTables)

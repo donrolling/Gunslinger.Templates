@@ -17,6 +17,7 @@ namespace Gunslinger.Models
         public string OutputRelativePath { get; set; }
         public string TemplateText { get; set; }
         public TemplateType Type { get; set; }
-        public List<FileRename> FileRename { get; set; }
+        public PluralizationSettings PluralizationSettings { get; set; } = PluralizationSettings.None;
+		public List<FileRename> FileRename { get; set; }
     }
 }

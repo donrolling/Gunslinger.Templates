@@ -95,19 +95,19 @@ namespace Gunslinger.DataProviders
             var parameters = method.GetParameters();
             foreach (var param in parameters)
             {
-                var dataTypeInfo = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(param.ParameterType);
+                var dataTypeInfo = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(param.ParameterType, template);
                 addDataTypeInput(template, method.Name, ns, rawTypeResults, results, dataTypeInfo);
             }
         }
 
         private static void addMethodReturnType(Template template, MethodInfo methodInfo, string ns, Dictionary<string, IProviderModel> rawTypeResults, Dictionary<string, IProviderModel> results)
         {
-            var dataTypeInfo = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(methodInfo.ReturnType);
+            var dataTypeInfo = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(methodInfo.ReturnType, template);
             var typeName = dataTypeInfo.Name.Value;
             // some api methods use attributes instead of return types to signify the actual return type. Kinda weird, but ok.
             if (_checkMethodDecoratorsWhenReturnTypeIs.Contains(typeName))
             {
-                dataTypeInfo = ReflectionUtility.GetReturnTypeInfoFromCustomAttributesWhenNeeded(methodInfo);
+                dataTypeInfo = ReflectionUtility.GetReturnTypeInfoFromCustomAttributesWhenNeeded(methodInfo, template);
             }
 
             addDataTypeInput(template, methodInfo.Name, ns, rawTypeResults, results, dataTypeInfo);
@@ -156,7 +156,7 @@ namespace Gunslinger.DataProviders
             var properties = new List<ReflectionProperty>();
             foreach (var propertyInfo in dataTypeInfo.Type.GetProperties())
             {
-                var property = ReflectionPropertyFactory.Convert(dataTypeInfo.Name, propertyInfo, template.Language);
+                var property = ReflectionPropertyFactory.Convert(dataTypeInfo.Name, propertyInfo, template.Language, template);
                 properties.Add(property);
             }
             return new ReflectionModel

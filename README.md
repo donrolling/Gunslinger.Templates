@@ -9,3 +9,6 @@ https://user-images.githubusercontent.com/1778167/122961824-64603780-d34a-11eb-8
 
 Use the wiki to see documentation and explanation of different elements.
 https://github.com/donrolling/Gunslinger.Templates/wiki
+
+Pluralizer
+https://github.com/sarathkcm/Pluralize.NET

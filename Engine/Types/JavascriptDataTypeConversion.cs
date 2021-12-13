@@ -1,11 +1,12 @@
 ﻿using Gunslinger.Factories;
+using Gunslinger.Models;
 using Gunslinger.Models.Reflection;
 
 namespace Gunslinger.Types
 {
     public class JavascriptDataTypeConversion
     {
-        public static DataTypeInfo Convert_CSDataType_to_JSDataType(DataTypeInfo dataTypeInfo)
+        public static DataTypeInfo Convert_CSDataType_to_JSDataType(DataTypeInfo dataTypeInfo, Template template)
         {
             try
             {
@@ -22,7 +23,7 @@ namespace Gunslinger.Types
                     KeyType = dataTypeInfo.KeyType
                 };
                 var jsType = getJSType(dataTypeInfo);
-                clone.Name = NameFactory.Create(jsType);
+                clone.Name = NameFactory.Create(jsType, template);
                 // js is probably just using a standard array list type
                 // could make this configurable
                 clone.ListType = "Array";

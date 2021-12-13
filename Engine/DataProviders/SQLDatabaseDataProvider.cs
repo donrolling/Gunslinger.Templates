@@ -12,9 +12,9 @@ namespace Gunslinger.DataProviders
     public class SQLDatabaseDataProvider : LoggingWorker, IDataProvider
     {
         private readonly ISQLServerInfoFactory _sqlServerInfoFactory;
-        private readonly DataProviderSettings _dataProviderSettings;
+        private readonly SQLDataProviderSettings _dataProviderSettings;
 
-        public SQLDatabaseDataProvider(ISQLServerInfoFactory sqlServerInfoFactory, DataProviderSettings dataProvider, ILoggerFactory loggerFactory) : base(loggerFactory)
+        public SQLDatabaseDataProvider(ISQLServerInfoFactory sqlServerInfoFactory, SQLDataProviderSettings dataProvider, ILoggerFactory loggerFactory) : base(loggerFactory)
         {
             _sqlServerInfoFactory = sqlServerInfoFactory;
             _dataProviderSettings = dataProvider;
@@ -27,7 +27,7 @@ namespace Gunslinger.DataProviders
             {
                 var sqlServerInfo = _sqlServerInfoFactory.Create(_dataProviderSettings);
                 var tables = TableInfoFactory.Create(sqlServerInfo, settings, includeTheseEntitiesOnly, excludeTheseEntities);
-                var sqlTables = SQLTableFactory.Create(template.Namespace, template.Language, tables);
+                var sqlTables = SQLTableFactory.Create(template.Namespace, template.Language, tables, template);
                 var providerModels = new Dictionary<string, IProviderModel>();
                 foreach (var sqlTable in sqlTables)
                 {

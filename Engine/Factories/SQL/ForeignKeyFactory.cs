@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Gunslinger.Models;
 using Gunslinger.Models.SQL;
 using Microsoft.SqlServer.Management.Smo;
 
@@ -7,10 +8,19 @@ namespace Gunslinger.Factories.SQL
 {
     public class ForeignKeyFactory
     {
-        public static SQLForeignKey Create(string sourceTableName, string sourceSchemaName, string sourceColumnName, string referenceTableName, string referenceSchemaName, string referenceColumnName, SqlDataType sqlDataType)
+        public static SQLForeignKey Create(
+            string sourceTableName, 
+            string sourceSchemaName, 
+            string sourceColumnName, 
+            string referenceTableName, 
+            string referenceSchemaName, 
+            string referenceColumnName, 
+            SqlDataType sqlDataType, 
+            Template template
+        )
         {
-            var sourceColumnSource = ColumnSourceFactory.Create(sourceTableName, sourceSchemaName, sourceColumnName, sqlDataType);
-            var referenceColumnSource = ColumnSourceFactory.Create(referenceTableName, referenceSchemaName, referenceColumnName, sqlDataType);
+            var sourceColumnSource = ColumnSourceFactory.Create(sourceTableName, sourceSchemaName, sourceColumnName, sqlDataType, template);
+            var referenceColumnSource = ColumnSourceFactory.Create(referenceTableName, referenceSchemaName, referenceColumnName, sqlDataType, template);
 
             return new Models.SQL.SQLForeignKey
             {
@@ -19,7 +29,7 @@ namespace Gunslinger.Factories.SQL
             };
         }
 
-        public static List<SQLForeignKey> Create(IEnumerable<Table> tables)
+        public static List<SQLForeignKey> Create(IEnumerable<Table> tables, Template template)
         {
             var sqlForeignKeys = new List<SQLForeignKey>();
             foreach (var table in tables)
@@ -35,7 +45,16 @@ namespace Gunslinger.Factories.SQL
                             sqlDataType = column.DataType.SqlDataType;
                         }
                     }
-                    var fk = ForeignKeyFactory.Create(table.Name, table.Schema, fkColumn.Name, key.ReferencedTable, key.ReferencedTableSchema, fkColumn.ReferencedColumn, sqlDataType);
+                    var fk = ForeignKeyFactory.Create(
+                        table.Name, 
+                        table.Schema, 
+                        fkColumn.Name, 
+                        key.ReferencedTable, 
+                        key.ReferencedTableSchema, 
+                        fkColumn.ReferencedColumn, 
+                        sqlDataType, 
+                        template
+                    );
                     sqlForeignKeys.Add(fk);
                 }
             }

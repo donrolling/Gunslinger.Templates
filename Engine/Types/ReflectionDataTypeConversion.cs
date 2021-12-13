@@ -1,4 +1,5 @@
 ﻿using Gunslinger.Factories;
+using Gunslinger.Models;
 using Gunslinger.Models.Reflection;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Gunslinger.Types
 
         // this converts from c# reflection to c# like a human would write it
         // totally incomplete
-        public static DataTypeInfo Convert_ReflectionDataType_to_CSDataType(Type type)
+        public static DataTypeInfo Convert_ReflectionDataType_to_CSDataType(Type type, Template template)
         {
             var isCollection = type.IsGenericType &&
                 (
@@ -34,7 +35,7 @@ namespace Gunslinger.Types
                 );
             if (isCollection)
             {
-                return getListDataTypeInfo(type);
+                return getListDataTypeInfo(type, template);
             }
             var isDictionary = type.IsGenericType &&
                  (
@@ -45,12 +46,12 @@ namespace Gunslinger.Types
 
             if (isDictionary)
             {
-                return getDictionaryDataTypeInfo(type);
+                return getDictionaryDataTypeInfo(type, template);
             }
-            return getBasicTypeInfo(type);
+            return getBasicTypeInfo(type, template);
         }
 
-        private static DataTypeInfo getDictionaryDataTypeInfo(Type type)
+        private static DataTypeInfo getDictionaryDataTypeInfo(Type type, Template template)
         {
             var dictionaryType = string.Empty;
             if (typeof(IDictionary<,>).IsAssignableFrom(type.GetGenericTypeDefinition()))
@@ -69,21 +70,21 @@ namespace Gunslinger.Types
 
             var keyType = type.GetGenericArguments()[0];
             var underlyingType = type.GetGenericArguments()[0];
-            var keyDataTypeInfo = Convert_ReflectionDataType_to_CSDataType(keyType);
-            var valueDataTypeInfo = Convert_ReflectionDataType_to_CSDataType(underlyingType);
+            var keyDataTypeInfo = Convert_ReflectionDataType_to_CSDataType(keyType, template);
+            var valueDataTypeInfo = Convert_ReflectionDataType_to_CSDataType(underlyingType, template);
             valueDataTypeInfo.KeyType = keyDataTypeInfo;
             valueDataTypeInfo.IsDictionary = true;
             valueDataTypeInfo.ListType = dictionaryType;
             return valueDataTypeInfo;
         }
 
-        private static DataTypeInfo getBasicTypeInfo(Type type)
+        private static DataTypeInfo getBasicTypeInfo(Type type, Template template)
         {
             // arrays
             if (type.IsArray)
             {
                 var elementType = type.GetElementType();
-                var basicTypeInfo = getBasicTypeInfo(elementType);
+                var basicTypeInfo = getBasicTypeInfo(elementType, template);
                 basicTypeInfo.IsList = true;
                 basicTypeInfo.ListType = "Array";
                 return basicTypeInfo;
@@ -93,34 +94,34 @@ namespace Gunslinger.Types
             switch (typeName)
             {
                 case "Nullable`1":
-                    return getNullableDataTypeInfo(type);
+                    return getNullableDataTypeInfo(type, template);
 
                 // simply remove task, because it should be resolved for output consumers
                 case "Task`1":
                 case "TaskFactory`1":
-                    return getTaskDataTypeInfo(type);
+                    return getTaskDataTypeInfo(type, template);
 
                 default:
                     return new DataTypeInfo
                     {
-                        Name = NameFactory.Create(convertBasicType(typeName)),
+                        Name = NameFactory.Create(convertBasicType(typeName), template),
                         Type = type
                     };
             }
         }
 
-        private static DataTypeInfo getTaskDataTypeInfo(Type type)
+        private static DataTypeInfo getTaskDataTypeInfo(Type type, Template template)
         {
             var taskResultType = type.GetGenericArguments()[0];
-            var result = Convert_ReflectionDataType_to_CSDataType(taskResultType);
+            var result = Convert_ReflectionDataType_to_CSDataType(taskResultType, template);
             result.IsTask = true;
             return result;
         }
 
-        private static DataTypeInfo getListDataTypeInfo(Type type)
+        private static DataTypeInfo getListDataTypeInfo(Type type, Template template)
         {
             var underlyingType = type.GetGenericArguments()[0];
-            var dataTypeInfo = Convert_ReflectionDataType_to_CSDataType(underlyingType);
+            var dataTypeInfo = Convert_ReflectionDataType_to_CSDataType(underlyingType, template);
             dataTypeInfo.IsList = true;
             var listType = getListType(type);
             dataTypeInfo.ListType = listType;
@@ -148,14 +149,14 @@ namespace Gunslinger.Types
             throw new Exception("Couldn't figure out what collection type this is.");
         }
 
-        private static DataTypeInfo getNullableDataTypeInfo(Type type)
+        private static DataTypeInfo getNullableDataTypeInfo(Type type, Template template)
         {
             var underlyingTypeName = Nullable.GetUnderlyingType(type).Name;
             var dataTypeName = convertBasicType(underlyingTypeName);
             return new DataTypeInfo
             {
                 IsNullable = true,
-                Name = NameFactory.Create(dataTypeName),
+                Name = NameFactory.Create(dataTypeName, template),
                 Type = type
             };
         }

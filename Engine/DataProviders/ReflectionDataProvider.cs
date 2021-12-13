@@ -59,11 +59,11 @@ namespace Gunslinger.DataProviders
 
         private static IProviderModel convert(Template template, Type type)
         {
-            var modelName = NameFactory.Create(type.Name);
+            var modelName = NameFactory.Create(type.Name, template);
             var properties = new List<ReflectionProperty>();
             foreach (var propertyInfo in type.GetProperties())
             {
-                var property = ReflectionPropertyFactory.Convert(modelName, propertyInfo, template.Language);
+                var property = ReflectionPropertyFactory.Convert(modelName, propertyInfo, template.Language, template);
                 properties.Add(property);
             }
             return new ReflectionModel

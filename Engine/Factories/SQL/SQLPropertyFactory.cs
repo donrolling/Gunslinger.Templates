@@ -28,13 +28,13 @@ namespace Gunslinger.Factories.SQL
             "varbinarymax"
         };
 
-        public static SQLColumn Create(Name modelName, Column column, Enum.Language language)
+        public static SQLColumn Create(Name modelName, Column column, Enum.Language language, Template template)
         {
             var property = new SQLColumn
             {
                 DefaultValue = column.DefaultConstraint?.Text,
                 Length = column.DataType.MaximumLength,
-                Name = NameFactory.Create(column.Name),
+                Name = NameFactory.Create(column.Name, template),
                 Nullable = column.Nullable,
                 PrimaryKey = column.InPrimaryKey,
                 SqlDataTypeEnum = column.DataType.SqlDataType,

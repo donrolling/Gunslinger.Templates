@@ -11,14 +11,14 @@ namespace Gunslinger.Factories.SQL
 {
     public class SQLTableFactory
     {
-        public static IEnumerable<SQLTable> Create(string @namespace, Enum.Language language, IEnumerable<Table> tables)
+        public static IEnumerable<SQLTable> Create(string @namespace, Enum.Language language, IEnumerable<Table> tables, Template template)
         {
             // get all the foreign key meta data first
-            var sqlForeignKeys = ForeignKeyFactory.Create(tables);
+            var sqlForeignKeys = ForeignKeyFactory.Create(tables, template);
             var sqlTables = new List<SQLTable>();
             foreach (var table in tables)
             {
-                var sqlBasicTableCreateResult = createBasicTable(@namespace, language, table);
+                var sqlBasicTableCreateResult = createBasicTable(@namespace, language, table, template);
                 if (sqlBasicTableCreateResult.Failure)
                 {
                     continue;
@@ -37,15 +37,15 @@ namespace Gunslinger.Factories.SQL
             return sqlTable;
         }
 
-        private static OperationResult<SQLBasicTable> createBasicTable(string @namespace, Enum.Language language, Table table)
+        private static OperationResult<SQLBasicTable> createBasicTable(string @namespace, Enum.Language language, Table table, Template template)
         {
             if (string.IsNullOrEmpty(table.Name))
             {
                 throw new Exception("Table names must not be empty.");
             }
-            var modelName = NameFactory.Create(table.Name);
-            var sqlColumns = getSQLColumns(modelName, language, table.Columns);
-            var sqlKeys = getSQLKeys(sqlColumns);
+            var modelName = NameFactory.Create(table.Name, template);
+            var sqlColumns = getSQLColumns(modelName, language, table.Columns, template);
+            var sqlKeys = getSQLKeys(sqlColumns, template);
             if (!sqlKeys.Any())
             {
                 return OperationResult<SQLBasicTable>.Fail();
@@ -55,7 +55,7 @@ namespace Gunslinger.Factories.SQL
             var entity = new SQLTable
             {
                 UniqueName = uniqueName,
-                Name = NameFactory.Create(table.Name),
+                Name = NameFactory.Create(table.Name, template),
                 Schema = table.Schema,
                 Key = sqlKeys.FirstOrDefault(),
                 Keys = sqlKeys,
@@ -65,23 +65,23 @@ namespace Gunslinger.Factories.SQL
             return OperationResult<SQLBasicTable>.Ok(entity);
         }
 
-        private static List<SQLKey> getSQLKeys(List<SQLColumn> sqlColumns)
+        private static List<SQLKey> getSQLKeys(List<SQLColumn> sqlColumns, Template template)
         {
             var result = new List<SQLKey>();
             foreach (var sqlColumn in sqlColumns.Where(a => a.PrimaryKey))
             {
-                var key = KeyFactory.Create(sqlColumn.Name.Value, sqlColumn.SqlDataTypeEnum);
+                var key = KeyFactory.Create(sqlColumn.Name.Value, sqlColumn.SqlDataTypeEnum, template);
                 result.Add(key);
             }
             return result;
         }
 
-        private static List<SQLColumn> getSQLColumns(Name modelName, Enum.Language language, ColumnCollection columns)
+        private static List<SQLColumn> getSQLColumns(Name modelName, Enum.Language language, ColumnCollection columns, Template template)
         {
             var result = new List<SQLColumn>();
             foreach (Column column in columns)
             {
-                var property = SQLPropertyFactory.Create(modelName, column, language);
+                var property = SQLPropertyFactory.Create(modelName, column, language, template);
                 result.Add(property);
             }
             return result;

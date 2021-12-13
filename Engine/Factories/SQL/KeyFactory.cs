@@ -10,9 +10,9 @@ namespace Gunslinger.Factories.SQL
 {
     public class KeyFactory
     {
-        public static SQLKey Create(string name, SqlDataType sqlDataType)
+        public static SQLKey Create(string name, SqlDataType sqlDataType, Template template)
         {
-            var _name = NameFactory.Create(name);
+            var _name = NameFactory.Create(name, template);
             return Create(_name, sqlDataType);
         }
 

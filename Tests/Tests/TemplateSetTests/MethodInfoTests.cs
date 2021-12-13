@@ -15,12 +15,14 @@ namespace Tests.Tests
     {
         private readonly IGeneratorFacade _generatorFacade;
         private readonly ITemplateOutputEngine _templateOutputEngine;
+		private readonly Template _template;
 
-        public MethodInfoTests()
+		public MethodInfoTests()
         {
             _generatorFacade = TestBootstrapper.GetGeneratorFacade("Configurations\\MethodInfoConfig.json");
             _templateOutputEngine = TestBootstrapper.ServiceProvider.GetService<ITemplateOutputEngine>();
             _templateOutputEngine.CleanupOutputDirectory(TestBootstrapper.GenerationContext.OutputDirectory);
+            _template = new Template();
         }
 
         [TestMethod]
@@ -34,7 +36,7 @@ namespace Tests.Tests
         public void TypeConversion_StringType()
         {
             var type = typeof(System.String);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual(result.Name.Value, "string");
         }
 
@@ -42,7 +44,7 @@ namespace Tests.Tests
         public void TypeConversion_TaskComplexType()
         {
             var type = typeof(Task<Model>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("Model", result.Name.Value);
             Assert.IsTrue(result.IsTask);
         }
@@ -51,7 +53,7 @@ namespace Tests.Tests
         public void TypeConversion_TaskListComplexType()
         {
             var type = typeof(Task<List<Model>>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("Model", result.Name.Value);
             Assert.IsTrue(result.IsList);
             Assert.IsTrue(result.IsTask);
@@ -61,7 +63,7 @@ namespace Tests.Tests
         public void TypeConversion_NullableType()
         {
             var type = typeof(int?);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsNullable);
         }
@@ -70,7 +72,7 @@ namespace Tests.Tests
         public void TypeConversion_ListOfNullableType()
         {
             var type = typeof(List<int?>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsList);
             Assert.IsTrue(result.IsNullable);
@@ -84,7 +86,7 @@ namespace Tests.Tests
         public void TypeConversion_IEnumerableOfType()
         {
             var type = typeof(IEnumerable<int>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsList);
             Assert.AreEqual("IEnumerable", result.ListType);
@@ -94,7 +96,7 @@ namespace Tests.Tests
         public void TypeConversion_IDictionaryOfType()
         {
             var type = typeof(IDictionary<string, Model>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("Model", result.Name.Value);
             Assert.IsTrue(result.IsDictionary);
             Assert.AreEqual("string", result.KeyType);
@@ -105,7 +107,7 @@ namespace Tests.Tests
         public void TypeConversion_DictionaryOfType()
         {
             var type = typeof(Dictionary<string, Model>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("Model", result.Name.Value);
             Assert.IsTrue(result.IsDictionary);
             Assert.AreEqual("string", result.KeyType);
@@ -116,7 +118,7 @@ namespace Tests.Tests
         public void TypeConversion_ArrayType()
         {
             var type = typeof(int[]);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsList);
             Assert.AreEqual("Array", result.ListType);
@@ -126,7 +128,7 @@ namespace Tests.Tests
         public void TypeConversion_ArrayComplexType()
         {
             var type = typeof(Model[]);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("Model", result.Name.Value);
             Assert.IsTrue(result.IsList);
             Assert.AreEqual("Array", result.ListType);
@@ -136,7 +138,7 @@ namespace Tests.Tests
         public void TypeConversion_ArrayNullableType()
         {
             var type = typeof(int?[]);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsNullable);
             Assert.IsTrue(result.IsList);
@@ -147,7 +149,7 @@ namespace Tests.Tests
         public void TypeConversion_TaskArrayNullableType()
         {
             var type = typeof(Task<int?[]>);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("int", result.Name.Value);
             Assert.IsTrue(result.IsNullable);
             Assert.IsTrue(result.IsList);
@@ -159,7 +161,7 @@ namespace Tests.Tests
         public void TypeConversion_DoubleType()
         {
             var type = typeof(double);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("double", result.Name.Value);
         }
 
@@ -167,7 +169,7 @@ namespace Tests.Tests
         public void TypeConversion_FloatType()
         {
             var type = typeof(float);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("single", result.Name.Value);
         }
 
@@ -175,7 +177,7 @@ namespace Tests.Tests
         public void TypeConversion_SingleType()
         {
             var type = typeof(Single);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("single", result.Name.Value);
         }
 
@@ -183,7 +185,7 @@ namespace Tests.Tests
         public void TypeConversion_CharType()
         {
             var type = typeof(char);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("char", result.Name.Value);
         }
 
@@ -191,7 +193,7 @@ namespace Tests.Tests
         public void TypeConversion_BooleanType()
         {
             var type = typeof(bool);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("bool", result.Name.Value);
         }
 
@@ -199,7 +201,7 @@ namespace Tests.Tests
         public void TypeConversion_uintType()
         {
             var type = typeof(uint);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("uint", result.Name.Value);
         }
 
@@ -207,7 +209,7 @@ namespace Tests.Tests
         public void TypeConversion_shortType()
         {
             var type = typeof(short);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("short", result.Name.Value);
         }
 
@@ -215,7 +217,7 @@ namespace Tests.Tests
         public void TypeConversion_ushortType()
         {
             var type = typeof(ushort);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("ushort", result.Name.Value);
         }
 
@@ -223,7 +225,7 @@ namespace Tests.Tests
         public void TypeConversion_ulongType()
         {
             var type = typeof(ulong);
-            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type);
+            var result = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(type, _template);
             Assert.AreEqual("ulong", result.Name.Value);
         }
     }

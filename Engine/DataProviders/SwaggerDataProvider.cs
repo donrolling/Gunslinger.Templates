@@ -68,7 +68,7 @@ namespace Gunslinger.DataProviders
                         }
                     }
 
-                    var item = parseItem(template.Namespace, key, value);
+                    var item = parseItem(template.Namespace, key, value, template);
                     if (item == null) continue;
                     items.Add(key, item);
                 }
@@ -201,13 +201,13 @@ namespace Gunslinger.DataProviders
             throw new Exception("Unknown parsing situation. Items node had no type or $ref property.");
         }
 
-        private Model parseItem(string _namespace, string className, JToken definition)
+        private Model parseItem(string _namespace, string className, JToken definition, Template template)
         {
             var item = new Model
             {
                 Namespace = _namespace,
                 Schema = "",
-                Name = NameFactory.Create(className)
+                Name = NameFactory.Create(className, template)
             };
             try
             {
@@ -225,7 +225,7 @@ namespace Gunslinger.DataProviders
                 var properties = definition["properties"].Value<JObject>();
                 foreach (var (key, value) in properties)
                 {
-                    var prop = getProperty(requiredProperties, key, value);
+                    var prop = getProperty(requiredProperties, key, value, template);
                     item.Properties.Add(prop);
                 }
 
@@ -238,14 +238,14 @@ namespace Gunslinger.DataProviders
             }
         }
 
-        private Property getProperty(List<string> requiredProperties, string key, JToken value)
+        private Property getProperty(List<string> requiredProperties, string key, JToken value, Template template)
         {
             var isNullable = getNullableStatus(requiredProperties, key, value);
             var type = getDataType(value, isNullable);
             var propertyDescription = value["description"] != null ? value["description"].ToString() : string.Empty;
             var prop = new Property
             {
-                Name = NameFactory.Create(key),
+                Name = NameFactory.Create(key, template),
                 Type = type,
                 Description = propertyDescription,
                 IsNullable = isNullable

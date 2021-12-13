@@ -15,7 +15,7 @@
     {
       "Name": "SQLModelsDataProvider",
       "TypeName": "SQLModelDataProvider",
-      "GenerateViews":  true,
+      "GenerateViews": true,
       "UseLocalDataSource": false,
       "LocalDataSource": "",
       "DataSource": "Data Source=7CSM-DBS01-DC1;Initial Catalog=CS_SPL;Integrated Security=true"
@@ -28,6 +28,7 @@
       "Name": "EntityModels",
       "Namespace": "VirtualBinder.Data.Models",
       "IsStub": false,
+      "PluralizationSettings": "Singular",
       "InputRelativePath": "VBModel.txt",
       "OutputRelativePath": "Models\\{entityName}.cs",
       "Language": "csharp",
