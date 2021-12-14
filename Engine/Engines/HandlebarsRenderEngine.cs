@@ -15,6 +15,14 @@ namespace Gunslinger.Engines
             {
                 var type0 = arguments[0].GetType().Name;
                 var type1 = arguments[1].GetType().Name;
+                if (type0 == "UndefinedBindingResult")
+                {
+                    throw new System.Exception("Argument 0 undefined");
+                }
+                if (type1 == "UndefinedBindingResult")
+                {
+                    throw new System.Exception("Argument 1 undefined");
+                }
                 if (type0 == "String" && type1 == "String")
                 {
                     if (arguments[0].Equals(arguments[1]))
