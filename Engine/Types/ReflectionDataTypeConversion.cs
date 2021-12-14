@@ -104,7 +104,7 @@ namespace Gunslinger.Types
                 default:
                     return new DataTypeInfo
                     {
-                        Name = NameFactory.Create(convertBasicType(typeName), template),
+                        Name = NameFactory.Create(convertBasicType(typeName), template, false),
                         Type = type
                     };
             }
@@ -156,7 +156,7 @@ namespace Gunslinger.Types
             return new DataTypeInfo
             {
                 IsNullable = true,
-                Name = NameFactory.Create(dataTypeName, template),
+                Name = NameFactory.Create(dataTypeName, template, false),
                 Type = type
             };
         }

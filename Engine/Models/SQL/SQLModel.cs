@@ -6,6 +6,8 @@ namespace Gunslinger.Models.SQL
 {
     public class SQLModel : ModelBase, IProviderModel
     {
+        public Name TableName { get; set; }
+
         public SQLKey Key { get; set; }
 
         public List<SQLKey> Keys { get; set; }

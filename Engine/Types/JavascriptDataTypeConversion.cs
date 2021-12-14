@@ -23,7 +23,7 @@ namespace Gunslinger.Types
                     KeyType = dataTypeInfo.KeyType
                 };
                 var jsType = getJSType(dataTypeInfo);
-                clone.Name = NameFactory.Create(jsType, template);
+                clone.Name = NameFactory.Create(jsType, template, false);
                 // js is probably just using a standard array list type
                 // could make this configurable
                 clone.ListType = "Array";

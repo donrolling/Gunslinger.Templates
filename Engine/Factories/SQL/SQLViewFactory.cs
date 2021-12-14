@@ -10,7 +10,7 @@ namespace Gunslinger.Factories.SQL
 	{
 		public static List<SQLView> Create(string @namespace, Enum.Language language, IEnumerable<View> smoViews, Template template)
 		{
-			throw new NotImplementedException();
+			return new List<SQLView>();
 		}
 	}
 }

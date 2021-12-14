@@ -24,6 +24,7 @@ namespace Gunslinger.Factories.SQL
         };
 
         private static List<string> maxTypes = new List<string> {
+            "varcharmax",
             "nvarcharmax",
             "varbinarymax"
         };
@@ -34,7 +35,7 @@ namespace Gunslinger.Factories.SQL
             {
                 DefaultValue = column.DefaultConstraint?.Text,
                 Length = column.DataType.MaximumLength,
-                Name = NameFactory.Create(column.Name, template),
+                Name = NameFactory.Create(column.Name, template, false),
                 Nullable = column.Nullable,
                 PrimaryKey = column.InPrimaryKey,
                 SqlDataTypeEnum = column.DataType.SqlDataType,

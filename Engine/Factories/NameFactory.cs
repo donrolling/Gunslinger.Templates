@@ -10,8 +10,13 @@ namespace Gunslinger.Factories
 	{
 		public static Regex rgx = new Regex("[^a-zA-Z0-9 -]");
 
-		public static Name Create(string name, Template template)
+		public static Name Create(string name, Template template, bool isClass)
 		{
+			// don't use pluralization on anything but class names
+			if (!isClass)
+			{
+				return MakeName(name);
+			}
 			var pluralizer = new Pluralizer();
 			switch (template.PluralizationSettings)
 			{

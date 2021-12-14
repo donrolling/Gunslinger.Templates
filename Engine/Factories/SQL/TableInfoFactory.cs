@@ -19,20 +19,20 @@ namespace Gunslinger.Factories.SQL
             foreach (Table table in sqlServerInfo.Database.Tables)
             {
                 var uniqueName = UniqueNameFactory.Create(table.Schema, table.Name);
-                if (_excludedTypes.Contains(uniqueName))
+                if (_excludedTypes.Contains(table.Name))
                 {
                     continue;
                 }
                 if (whiteList)
                 {
-                    if (!includeTheseEntitiesOnly.Contains(uniqueName))
+                    if (!includeTheseEntitiesOnly.Contains(table.Name))
                     {
                         continue;
                     }
                 }
                 if (blackList)
                 {
-                    if (excludeTheseEntities.Contains(uniqueName))
+                    if (excludeTheseEntities.Contains(table.Name))
                     {
                         continue;
                     }

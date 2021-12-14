@@ -12,18 +12,35 @@ namespace Gunslinger.Factories.SQL
             string sourceTableName, 
             string sourceSchemaName, 
             string sourceColumnName, 
+            bool sourceColumnNullable,
             string referenceTableName, 
             string referenceSchemaName, 
-            string referenceColumnName, 
+            string referenceColumnName,
+            bool referenceColumnNullable,
             SqlDataType sqlDataType, 
             Template template
         )
         {
-            var sourceColumnSource = ColumnSourceFactory.Create(sourceTableName, sourceSchemaName, sourceColumnName, sqlDataType, template);
-            var referenceColumnSource = ColumnSourceFactory.Create(referenceTableName, referenceSchemaName, referenceColumnName, sqlDataType, template);
+            var sourceColumnSource = ColumnSourceFactory.Create(
+                sourceTableName, 
+                sourceSchemaName, 
+                sourceColumnName,
+                sqlDataType,
+                sourceColumnNullable,
+                template
+            );
+            var referenceColumnSource = ColumnSourceFactory.Create(
+                referenceTableName, 
+                referenceSchemaName, 
+                referenceColumnName, 
+                sqlDataType, 
+                referenceColumnNullable,
+                template
+            );
 
-            return new Models.SQL.SQLForeignKey
+            return new SQLForeignKey
             {
+                Nullable = sourceColumnNullable || referenceColumnNullable, // todo: sharing this value is sloppy, but ok for now
                 Reference = sourceColumnSource,
                 Source = referenceColumnSource
             };
@@ -37,21 +54,30 @@ namespace Gunslinger.Factories.SQL
                 foreach (ForeignKey key in table.ForeignKeys)
                 {
                     var fkColumn = key.Columns[0];
-                    SqlDataType sqlDataType = SqlDataType.BigInt; // just assigning a default value so the compiler doesn't get mad
+                    var sqlDataType = SqlDataType.BigInt; // just assigning a default value so the compiler doesn't get mad
+                    // sharing this value between both tables because looking up the FK Table and looping through its
+                    // columns doesn't seem worth it. Propbably should do it though.
+                    var isNullable = false; // todo: sloppy, fix
+                    // find the column by looping (lame, but have to)
+                    // set properties once you find it
                     foreach (Column column in table.Columns)
                     {
                         if (column.Name == fkColumn.Name)
                         {
                             sqlDataType = column.DataType.SqlDataType;
+                            isNullable = column.Nullable;
+                            break;
                         }
                     }
                     var fk = ForeignKeyFactory.Create(
                         table.Name, 
                         table.Schema, 
-                        fkColumn.Name, 
+                        fkColumn.Name,
+                        isNullable,
                         key.ReferencedTable, 
                         key.ReferencedTableSchema, 
-                        fkColumn.ReferencedColumn, 
+                        fkColumn.ReferencedColumn,
+                        isNullable,
                         sqlDataType, 
                         template
                     );

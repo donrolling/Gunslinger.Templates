@@ -43,7 +43,7 @@ namespace Gunslinger.Factories.SQL
             {
                 throw new Exception("Table names must not be empty.");
             }
-            var modelName = NameFactory.Create(table.Name, template);
+            var modelName = NameFactory.Create(table.Name, template, true);
             var sqlColumns = getSQLColumns(modelName, language, table.Columns, template);
             var sqlKeys = getSQLKeys(sqlColumns, template);
             if (!sqlKeys.Any())
@@ -54,8 +54,9 @@ namespace Gunslinger.Factories.SQL
             // kinda assuming there is only one key for now
             var entity = new SQLTable
             {
+                TableName = NameFactory.Create(table.Name, template, false), // tablename does not represent a class 
                 UniqueName = uniqueName,
-                Name = NameFactory.Create(table.Name, template),
+                Name = NameFactory.Create(table.Name, template, true), // name does represent a class 
                 Schema = table.Schema,
                 Key = sqlKeys.FirstOrDefault(),
                 Keys = sqlKeys,
@@ -70,7 +71,7 @@ namespace Gunslinger.Factories.SQL
             var result = new List<SQLKey>();
             foreach (var sqlColumn in sqlColumns.Where(a => a.PrimaryKey))
             {
-                var key = KeyFactory.Create(sqlColumn.Name.Value, sqlColumn.SqlDataTypeEnum, template);
+                var key = KeyFactory.Create(sqlColumn, template);
                 result.Add(key);
             }
             return result;

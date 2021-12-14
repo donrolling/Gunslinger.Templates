@@ -18,7 +18,7 @@ namespace Gunslinger.Factories.Javascript
                     var dataTypeInfo = ReflectionDataTypeConversion.Convert_ReflectionDataType_to_CSDataType(property.PropertyType, template);
                     return new ReflectionProperty
                     {
-                        Name = NameFactory.Create(property.Name, template),
+                        Name = NameFactory.Create(property.Name, template, true),
                         ModelName = modelName,
                         Type = dataTypeInfo.Name.Value
                     };
@@ -27,7 +27,7 @@ namespace Gunslinger.Factories.Javascript
                     var jsDataTypeInfo = JavascriptDataTypeConversion.Convert_CSDataType_to_JSDataType(csDataTypeInfo, template);
                     return new ReflectionProperty
                     {
-                        Name = NameFactory.Create(property.Name, template),
+                        Name = NameFactory.Create(property.Name, template, true),
                         ModelName = modelName,
                         Type = jsDataTypeInfo.Name.Value
                     };

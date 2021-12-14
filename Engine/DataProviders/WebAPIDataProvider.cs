@@ -64,7 +64,7 @@ namespace Gunslinger.DataProviders
             // example: AgencyManagementSystemController
             //  - route name default = AgencyManagementSystem
             // properties are Name = Route
-            var controllerName = NameFactory.Create(type.Name.TrimEnd("Controller".ToCharArray()), template);
+            var controllerName = NameFactory.Create(type.Name.TrimEnd("Controller".ToCharArray()), template, true);
             var routes = new List<RouteProperty>();
             foreach (var methodInfo in type.GetMethods())
             {
@@ -73,7 +73,7 @@ namespace Gunslinger.DataProviders
                 var inputParameters = ReflectionUtility.GetInputParameters(methodInfo, template);
                 routes.Add(new RouteProperty
                 {
-                    Name = NameFactory.Create(route, template),
+                    Name = NameFactory.Create(route, template, true),
                     ReturnType = returnType,
                     InputParameters = inputParameters
                 });

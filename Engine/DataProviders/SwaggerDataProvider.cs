@@ -207,7 +207,7 @@ namespace Gunslinger.DataProviders
             {
                 Namespace = _namespace,
                 Schema = "",
-                Name = NameFactory.Create(className, template)
+                Name = NameFactory.Create(className, template, true)
             };
             try
             {
@@ -245,7 +245,7 @@ namespace Gunslinger.DataProviders
             var propertyDescription = value["description"] != null ? value["description"].ToString() : string.Empty;
             var prop = new Property
             {
-                Name = NameFactory.Create(key, template),
+                Name = NameFactory.Create(key, template, false),
                 Type = type,
                 Description = propertyDescription,
                 IsNullable = isNullable
