@@ -40,7 +40,7 @@ namespace Gunslinger.Factories.SQL
 
             return new SQLForeignKey
             {
-                Nullable = sourceColumnNullable || referenceColumnNullable, // todo: sharing this value is sloppy, but ok for now
+                IsNullable = sourceColumnNullable || referenceColumnNullable, // todo: sharing this value is sloppy, but ok for now
                 Reference = sourceColumnSource,
                 Source = referenceColumnSource
             };
