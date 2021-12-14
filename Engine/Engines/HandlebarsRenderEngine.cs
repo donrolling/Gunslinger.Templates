@@ -14,7 +14,7 @@ namespace Gunslinger.Engines
             Handlebars.RegisterHelper("ifCond", (writer, options, context, arguments) =>
             {
                 var type0 = arguments[0].GetType().Name;
-                var type1 = arguments[0].GetType().Name;
+                var type1 = arguments[1].GetType().Name;
                 if (type0 == "String" && type1 == "String")
                 {
                     if (arguments[0].Equals(arguments[1]))
