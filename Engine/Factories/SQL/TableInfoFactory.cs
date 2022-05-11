@@ -18,7 +18,6 @@ namespace Gunslinger.Factories.SQL
             var blackList = excludeTheseEntities.Any();
             foreach (Table table in sqlServerInfo.Database.Tables)
             {
-                var uniqueName = UniqueNameFactory.Create(table.Schema, table.Name);
                 if (_excludedTypes.Contains(table.Name))
                 {
                     continue;
