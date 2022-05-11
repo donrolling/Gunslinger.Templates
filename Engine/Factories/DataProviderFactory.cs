@@ -58,24 +58,6 @@ namespace Gunslinger.Factories
                     _dataProviderDictionary.Add(sqlDataProviderSettings.Name, sqlModelDataProvider);
                     return sqlModelDataProvider;
 
-                //case "ReflectionDataProvider":
-                //    var reflectionDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                //    var reflectionDataProvider = new ReflectionDataProvider(reflectionDataProviderSettings, this._loggerFactory);
-                //    _dataProviderDictionary.Add(settings.Name, reflectionDataProvider);
-                //    return reflectionDataProvider;
-
-                //case "ReflectionMethodInfoDataProvider":
-                //    var reflectionMethodInfoDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                //    var reflectionMethodInfoDataProvider = new MethodInfoDataProvider(reflectionMethodInfoDataProviderSettings, this._loggerFactory);
-                //    _dataProviderDictionary.Add(settings.Name, reflectionMethodInfoDataProvider);
-                //    return reflectionMethodInfoDataProvider;
-
-                //case "WebAPIDataProvider":
-                //    var webAPIDataProviderDataProviderSettings = JsonConvert.DeserializeObject<ReflectionDataProviderSettings>(allSettings);
-                //    var webAPIDataProviderDataProvider = new WebAPIDataProvider(webAPIDataProviderDataProviderSettings, this._loggerFactory);
-                //    _dataProviderDictionary.Add(settings.Name, webAPIDataProviderDataProvider);
-                //    return webAPIDataProviderDataProvider;
-
                 default:
                     var msg = $"Create() - Name not matched: { generalSettings.TypeName }";
                     this.Logger.LogError(msg);
